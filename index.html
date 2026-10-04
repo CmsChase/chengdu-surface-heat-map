@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#172c30" />
+    <meta name="description" content="探索成都 2021–2024 年 QA 合格的 Landsat 地表温度与公开环境特征。" />
+    <title>成都地表热地图 · Chengdu Surface Heat</title>
+  </head>
+  <body>
+    <div id="app">
+      <header class="topbar">
+        <div class="brand"><span class="brand-mark">CD</span><span>成都地表热地图<small>CHENGDU SURFACE HEAT</small></span></div>
+        <div class="topbar-right"><span class="status-dot"></span><span>历史晴空观测 · 研究地图</span><a href="https://github.com/CmsChase/chengdu-surface-heat-map" target="_blank" rel="noreferrer">数据与代码 ↗</a></div>
+      </header>
+      <div class="shell">
+        <aside class="sidebar">
+          <div class="sidebar-scroll">
+            <p class="eyebrow">01 / 地图图层</p>
+            <h1>在地图上看<br /><em>成都的地表热</em></h1>
+            <p class="intro">查看已通过质量筛选的卫星地表温度，以及用于研究的土地、地形与天气特征。</p>
+            <div class="notice"><span class="notice-icon">ⓘ</span><span>灰白空格表示当日<strong>没有合格观测</strong>，不是温度较低。</span></div>
+            <div class="control-heading date-heading"><span>物理过境日期</span><span id="date-count">82 天</span></div>
+            <div class="date-controls"><label><span>年份</span><select id="year-select" aria-label="选择年份"></select></label><label><span>日期</span><select id="date-select" aria-label="选择日期"></select></label></div>
+            <div id="date-info" class="date-info"></div>
+            <div class="control-heading"><span>数据图层</span><span id="layer-kind">温度</span></div>
+            <div id="layer-list" class="layer-list"></div>
+            <details class="method"><summary>如何解读这张图 <span>↗</span></summary><p>温度是 Landsat 白天地表温度，不是气温、人体热暴露或健康结果。“相对温差”使用该次过境有合格观测的格网，以固定非水土地面积加权中位数为参照。云与质量过滤造成缺测，无法据此推断完整全市当天的真实排名。</p><p>地图采用可追溯的技术边界，不用于正式行政区统计。天气图层来自约 9 km 的 ERA5-Land 背景格点，不能当作 250 m 局地测量。</p></details>
+          </div>
+          <div class="sidebar-bottom"><span>250 M 固定格网</span><span>2021—2024 开发资料</span></div>
+        </aside>
+        <main class="map-shell">
+          <div id="map" aria-label="成都交互式地表温度地图"></div>
+          <div class="map-top"><div><span class="map-overline">MAP / CHENGDU</span><strong id="map-layer-title">加载地图中</strong><span id="map-subtitle">正在读取本地已验收数据</span></div><button id="reset-view" type="button">↗ 全市视图</button></div>
+          <div class="map-scale"><span id="legend-min"></span><div id="legend-gradient"></div><span id="legend-max"></span><small id="legend-unit"></small></div>
+          <div class="map-footnote" id="map-footnote">正在读取图层…</div>
+          <div id="inspector" class="inspector hidden" aria-live="polite"></div>
+          <div class="map-loading" id="map-loading">载入地图数据…</div>
+        </main>
+      </div>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

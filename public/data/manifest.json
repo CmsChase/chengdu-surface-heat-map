@@ -1,0 +1,1417 @@
+{
+  "schema_version": 1,
+  "study": "Chengdu clear-sky surface temperature map, 2021–2024 development evidence",
+  "grid_count": 231515,
+  "positive_land_grid_count": 230978,
+  "date_count": 82,
+  "observed_grid_date_records": 1964794,
+  "weather_point_count": 174,
+  "weather_fields": [
+    "t2m_last_k",
+    "t2m_prior24h_mean_k",
+    "d2m_last_k",
+    "u10_last_m_s",
+    "v10_last_m_s",
+    "ssrd_prior24h_j_m2",
+    "tp_prior24h_m"
+  ],
+  "static_scales": {
+    "tree": 1000,
+    "shrub": 1000,
+    "grass": 1000,
+    "crop": 1000,
+    "built": 1000,
+    "bare": 1000,
+    "snow": 1000,
+    "wetland": 1000,
+    "mangrove": 1000,
+    "moss": 1000,
+    "elevation": 1,
+    "slope": 100
+  },
+  "weather_points": [
+    [
+      30.1,
+      103.4
+    ],
+    [
+      30.1,
+      103.5
+    ],
+    [
+      30.1,
+      104.4
+    ],
+    [
+      30.1,
+      104.5
+    ],
+    [
+      30.2,
+      103.1
+    ],
+    [
+      30.2,
+      103.2
+    ],
+    [
+      30.2,
+      103.3
+    ],
+    [
+      30.2,
+      103.4
+    ],
+    [
+      30.2,
+      103.5
+    ],
+    [
+      30.2,
+      103.6
+    ],
+    [
+      30.2,
+      103.7
+    ],
+    [
+      30.2,
+      104.1
+    ],
+    [
+      30.2,
+      104.2
+    ],
+    [
+      30.2,
+      104.3
+    ],
+    [
+      30.2,
+      104.4
+    ],
+    [
+      30.2,
+      104.5
+    ],
+    [
+      30.2,
+      104.6
+    ],
+    [
+      30.2,
+      104.7
+    ],
+    [
+      30.3,
+      103.1
+    ],
+    [
+      30.3,
+      103.2
+    ],
+    [
+      30.3,
+      103.3
+    ],
+    [
+      30.3,
+      103.4
+    ],
+    [
+      30.3,
+      103.5
+    ],
+    [
+      30.3,
+      103.6
+    ],
+    [
+      30.3,
+      103.7
+    ],
+    [
+      30.3,
+      103.8
+    ],
+    [
+      30.3,
+      103.9
+    ],
+    [
+      30.3,
+      104.0
+    ],
+    [
+      30.3,
+      104.1
+    ],
+    [
+      30.3,
+      104.2
+    ],
+    [
+      30.3,
+      104.3
+    ],
+    [
+      30.3,
+      104.4
+    ],
+    [
+      30.3,
+      104.5
+    ],
+    [
+      30.3,
+      104.6
+    ],
+    [
+      30.3,
+      104.7
+    ],
+    [
+      30.3,
+      104.8
+    ],
+    [
+      30.3,
+      104.9
+    ],
+    [
+      30.4,
+      103.1
+    ],
+    [
+      30.4,
+      103.2
+    ],
+    [
+      30.4,
+      103.3
+    ],
+    [
+      30.4,
+      103.4
+    ],
+    [
+      30.4,
+      103.5
+    ],
+    [
+      30.4,
+      103.6
+    ],
+    [
+      30.4,
+      103.7
+    ],
+    [
+      30.4,
+      103.8
+    ],
+    [
+      30.4,
+      103.9
+    ],
+    [
+      30.4,
+      104.0
+    ],
+    [
+      30.4,
+      104.1
+    ],
+    [
+      30.4,
+      104.2
+    ],
+    [
+      30.4,
+      104.3
+    ],
+    [
+      30.4,
+      104.4
+    ],
+    [
+      30.4,
+      104.5
+    ],
+    [
+      30.4,
+      104.6
+    ],
+    [
+      30.4,
+      104.7
+    ],
+    [
+      30.4,
+      104.8
+    ],
+    [
+      30.4,
+      104.9
+    ],
+    [
+      30.5,
+      103.1
+    ],
+    [
+      30.5,
+      103.2
+    ],
+    [
+      30.5,
+      103.3
+    ],
+    [
+      30.5,
+      103.4
+    ],
+    [
+      30.5,
+      103.5
+    ],
+    [
+      30.5,
+      103.6
+    ],
+    [
+      30.5,
+      103.7
+    ],
+    [
+      30.5,
+      103.8
+    ],
+    [
+      30.5,
+      103.9
+    ],
+    [
+      30.5,
+      104.0
+    ],
+    [
+      30.5,
+      104.1
+    ],
+    [
+      30.5,
+      104.2
+    ],
+    [
+      30.5,
+      104.3
+    ],
+    [
+      30.5,
+      104.4
+    ],
+    [
+      30.5,
+      104.5
+    ],
+    [
+      30.5,
+      104.6
+    ],
+    [
+      30.5,
+      104.7
+    ],
+    [
+      30.5,
+      104.8
+    ],
+    [
+      30.5,
+      104.9
+    ],
+    [
+      30.6,
+      103.1
+    ],
+    [
+      30.6,
+      103.2
+    ],
+    [
+      30.6,
+      103.3
+    ],
+    [
+      30.6,
+      103.4
+    ],
+    [
+      30.6,
+      103.5
+    ],
+    [
+      30.6,
+      103.6
+    ],
+    [
+      30.6,
+      103.7
+    ],
+    [
+      30.6,
+      103.8
+    ],
+    [
+      30.6,
+      103.9
+    ],
+    [
+      30.6,
+      104.0
+    ],
+    [
+      30.6,
+      104.1
+    ],
+    [
+      30.6,
+      104.2
+    ],
+    [
+      30.6,
+      104.3
+    ],
+    [
+      30.6,
+      104.4
+    ],
+    [
+      30.6,
+      104.5
+    ],
+    [
+      30.6,
+      104.6
+    ],
+    [
+      30.6,
+      104.7
+    ],
+    [
+      30.6,
+      104.8
+    ],
+    [
+      30.6,
+      104.9
+    ],
+    [
+      30.7,
+      103.0
+    ],
+    [
+      30.7,
+      103.1
+    ],
+    [
+      30.7,
+      103.2
+    ],
+    [
+      30.7,
+      103.3
+    ],
+    [
+      30.7,
+      103.4
+    ],
+    [
+      30.7,
+      103.5
+    ],
+    [
+      30.7,
+      103.6
+    ],
+    [
+      30.7,
+      103.7
+    ],
+    [
+      30.7,
+      103.8
+    ],
+    [
+      30.7,
+      103.9
+    ],
+    [
+      30.7,
+      104.0
+    ],
+    [
+      30.7,
+      104.1
+    ],
+    [
+      30.7,
+      104.2
+    ],
+    [
+      30.7,
+      104.3
+    ],
+    [
+      30.7,
+      104.4
+    ],
+    [
+      30.7,
+      104.5
+    ],
+    [
+      30.7,
+      104.6
+    ],
+    [
+      30.7,
+      104.7
+    ],
+    [
+      30.7,
+      104.8
+    ],
+    [
+      30.8,
+      103.0
+    ],
+    [
+      30.8,
+      103.1
+    ],
+    [
+      30.8,
+      103.2
+    ],
+    [
+      30.8,
+      103.3
+    ],
+    [
+      30.8,
+      103.4
+    ],
+    [
+      30.8,
+      103.5
+    ],
+    [
+      30.8,
+      103.6
+    ],
+    [
+      30.8,
+      103.7
+    ],
+    [
+      30.8,
+      103.8
+    ],
+    [
+      30.8,
+      103.9
+    ],
+    [
+      30.8,
+      104.0
+    ],
+    [
+      30.8,
+      104.1
+    ],
+    [
+      30.8,
+      104.2
+    ],
+    [
+      30.8,
+      104.3
+    ],
+    [
+      30.8,
+      104.4
+    ],
+    [
+      30.8,
+      104.5
+    ],
+    [
+      30.8,
+      104.6
+    ],
+    [
+      30.8,
+      104.7
+    ],
+    [
+      30.9,
+      103.2
+    ],
+    [
+      30.9,
+      103.4
+    ],
+    [
+      30.9,
+      103.5
+    ],
+    [
+      30.9,
+      103.6
+    ],
+    [
+      30.9,
+      103.7
+    ],
+    [
+      30.9,
+      103.8
+    ],
+    [
+      30.9,
+      103.9
+    ],
+    [
+      30.9,
+      104.0
+    ],
+    [
+      30.9,
+      104.1
+    ],
+    [
+      30.9,
+      104.2
+    ],
+    [
+      30.9,
+      104.3
+    ],
+    [
+      30.9,
+      104.4
+    ],
+    [
+      30.9,
+      104.5
+    ],
+    [
+      30.9,
+      104.6
+    ],
+    [
+      31.0,
+      103.5
+    ],
+    [
+      31.0,
+      103.6
+    ],
+    [
+      31.0,
+      103.7
+    ],
+    [
+      31.0,
+      103.8
+    ],
+    [
+      31.0,
+      103.9
+    ],
+    [
+      31.0,
+      104.0
+    ],
+    [
+      31.0,
+      104.1
+    ],
+    [
+      31.0,
+      104.2
+    ],
+    [
+      31.0,
+      104.5
+    ],
+    [
+      31.1,
+      103.5
+    ],
+    [
+      31.1,
+      103.6
+    ],
+    [
+      31.1,
+      103.7
+    ],
+    [
+      31.1,
+      103.8
+    ],
+    [
+      31.1,
+      103.9
+    ],
+    [
+      31.1,
+      104.0
+    ],
+    [
+      31.1,
+      104.1
+    ],
+    [
+      31.2,
+      103.6
+    ],
+    [
+      31.2,
+      103.7
+    ],
+    [
+      31.2,
+      103.8
+    ],
+    [
+      31.2,
+      103.9
+    ],
+    [
+      31.2,
+      104.0
+    ],
+    [
+      31.3,
+      103.6
+    ],
+    [
+      31.3,
+      103.7
+    ],
+    [
+      31.3,
+      103.8
+    ],
+    [
+      31.3,
+      103.9
+    ],
+    [
+      31.4,
+      103.6
+    ],
+    [
+      31.4,
+      103.7
+    ],
+    [
+      31.4,
+      103.8
+    ],
+    [
+      31.4,
+      103.9
+    ]
+  ],
+  "dates": [
+    {
+      "date": "2021-05-03",
+      "rows": 5903,
+      "observed_area_weighted_median_c": 16.1153,
+      "physical_acquisition_id": "landsat-8|2021-05-03|path-130"
+    },
+    {
+      "date": "2021-05-19",
+      "rows": 7599,
+      "observed_area_weighted_median_c": 17.3851,
+      "physical_acquisition_id": "landsat-8|2021-05-19|path-130"
+    },
+    {
+      "date": "2021-06-04",
+      "rows": 78256,
+      "observed_area_weighted_median_c": 30.7034,
+      "physical_acquisition_id": "landsat-8|2021-06-04|path-130"
+    },
+    {
+      "date": "2021-06-20",
+      "rows": 7159,
+      "observed_area_weighted_median_c": 29.6301,
+      "physical_acquisition_id": "landsat-8|2021-06-20|path-130"
+    },
+    {
+      "date": "2021-06-29",
+      "rows": 3684,
+      "observed_area_weighted_median_c": 40.8532,
+      "physical_acquisition_id": "landsat-8|2021-06-29|path-129"
+    },
+    {
+      "date": "2021-07-22",
+      "rows": 862,
+      "observed_area_weighted_median_c": 35.0665,
+      "physical_acquisition_id": "landsat-8|2021-07-22|path-130"
+    },
+    {
+      "date": "2021-07-31",
+      "rows": 67946,
+      "observed_area_weighted_median_c": 37.8949,
+      "physical_acquisition_id": "landsat-8|2021-07-31|path-129"
+    },
+    {
+      "date": "2021-08-07",
+      "rows": 319,
+      "observed_area_weighted_median_c": 26.6804,
+      "physical_acquisition_id": "landsat-8|2021-08-07|path-130"
+    },
+    {
+      "date": "2021-08-23",
+      "rows": 93183,
+      "observed_area_weighted_median_c": 31.8484,
+      "physical_acquisition_id": "landsat-8|2021-08-23|path-130"
+    },
+    {
+      "date": "2021-09-24",
+      "rows": 16521,
+      "observed_area_weighted_median_c": 29.719,
+      "physical_acquisition_id": "landsat-8|2021-09-24|path-130"
+    },
+    {
+      "date": "2022-05-06",
+      "rows": 44168,
+      "observed_area_weighted_median_c": 32.2894,
+      "physical_acquisition_id": "landsat-8|2022-05-06|path-130"
+    },
+    {
+      "date": "2022-05-07",
+      "rows": 82323,
+      "observed_area_weighted_median_c": 39.4638,
+      "physical_acquisition_id": "landsat-9|2022-05-07|path-129"
+    },
+    {
+      "date": "2022-05-22",
+      "rows": 19953,
+      "observed_area_weighted_median_c": 32.1116,
+      "physical_acquisition_id": "landsat-8|2022-05-22|path-130"
+    },
+    {
+      "date": "2022-05-23",
+      "rows": 3439,
+      "observed_area_weighted_median_c": 34.5282,
+      "physical_acquisition_id": "landsat-9|2022-05-23|path-129"
+    },
+    {
+      "date": "2022-05-30",
+      "rows": 37777,
+      "observed_area_weighted_median_c": 37.9274,
+      "physical_acquisition_id": "landsat-9|2022-05-30|path-130"
+    },
+    {
+      "date": "2022-06-07",
+      "rows": 4098,
+      "observed_area_weighted_median_c": 31.5152,
+      "physical_acquisition_id": "landsat-8|2022-06-07|path-130"
+    },
+    {
+      "date": "2022-07-02",
+      "rows": 5903,
+      "observed_area_weighted_median_c": -0.363,
+      "physical_acquisition_id": "landsat-8|2022-07-02|path-129"
+    },
+    {
+      "date": "2022-07-09",
+      "rows": 68062,
+      "observed_area_weighted_median_c": 42.0717,
+      "physical_acquisition_id": "landsat-8|2022-07-09|path-130"
+    },
+    {
+      "date": "2022-07-10",
+      "rows": 19111,
+      "observed_area_weighted_median_c": 43.3142,
+      "physical_acquisition_id": "landsat-9|2022-07-10|path-129"
+    },
+    {
+      "date": "2022-07-17",
+      "rows": 1365,
+      "observed_area_weighted_median_c": 31.3084,
+      "physical_acquisition_id": "landsat-9|2022-07-17|path-130"
+    },
+    {
+      "date": "2022-07-25",
+      "rows": 19731,
+      "observed_area_weighted_median_c": 39.4963,
+      "physical_acquisition_id": "landsat-8|2022-07-25|path-130"
+    },
+    {
+      "date": "2022-07-26",
+      "rows": 24419,
+      "observed_area_weighted_median_c": 41.8103,
+      "physical_acquisition_id": "landsat-9|2022-07-26|path-129"
+    },
+    {
+      "date": "2022-08-02",
+      "rows": 394,
+      "observed_area_weighted_median_c": 26.4121,
+      "physical_acquisition_id": "landsat-9|2022-08-02|path-130"
+    },
+    {
+      "date": "2022-08-03",
+      "rows": 1067,
+      "observed_area_weighted_median_c": 34.6768,
+      "physical_acquisition_id": "landsat-8|2022-08-03|path-129"
+    },
+    {
+      "date": "2022-08-10",
+      "rows": 89805,
+      "observed_area_weighted_median_c": 31.9544,
+      "physical_acquisition_id": "landsat-8|2022-08-10|path-130"
+    },
+    {
+      "date": "2022-08-11",
+      "rows": 1447,
+      "observed_area_weighted_median_c": 41.4223,
+      "physical_acquisition_id": "landsat-9|2022-08-11|path-129"
+    },
+    {
+      "date": "2022-08-18",
+      "rows": 18412,
+      "observed_area_weighted_median_c": 26.894,
+      "physical_acquisition_id": "landsat-9|2022-08-18|path-130"
+    },
+    {
+      "date": "2022-08-27",
+      "rows": 5638,
+      "observed_area_weighted_median_c": 43.145,
+      "physical_acquisition_id": "landsat-9|2022-08-27|path-129"
+    },
+    {
+      "date": "2022-09-11",
+      "rows": 1044,
+      "observed_area_weighted_median_c": 23.4469,
+      "physical_acquisition_id": "landsat-8|2022-09-11|path-130"
+    },
+    {
+      "date": "2022-09-19",
+      "rows": 503,
+      "observed_area_weighted_median_c": 2.556,
+      "physical_acquisition_id": "landsat-9|2022-09-19|path-130"
+    },
+    {
+      "date": "2022-09-28",
+      "rows": 22314,
+      "observed_area_weighted_median_c": 30.0369,
+      "physical_acquisition_id": "landsat-9|2022-09-28|path-129"
+    },
+    {
+      "date": "2023-05-01",
+      "rows": 9951,
+      "observed_area_weighted_median_c": 26.3796,
+      "physical_acquisition_id": "landsat-9|2023-05-01|path-130"
+    },
+    {
+      "date": "2023-05-17",
+      "rows": 10013,
+      "observed_area_weighted_median_c": 30.4009,
+      "physical_acquisition_id": "landsat-9|2023-05-17|path-130"
+    },
+    {
+      "date": "2023-05-18",
+      "rows": 928,
+      "observed_area_weighted_median_c": 27.5144,
+      "physical_acquisition_id": "landsat-8|2023-05-18|path-129"
+    },
+    {
+      "date": "2023-06-10",
+      "rows": 21987,
+      "observed_area_weighted_median_c": 34.9486,
+      "physical_acquisition_id": "landsat-8|2023-06-10|path-130"
+    },
+    {
+      "date": "2023-06-18",
+      "rows": 30834,
+      "observed_area_weighted_median_c": 35.7689,
+      "physical_acquisition_id": "landsat-9|2023-06-18|path-130"
+    },
+    {
+      "date": "2023-06-26",
+      "rows": 5914,
+      "observed_area_weighted_median_c": 40.7319,
+      "physical_acquisition_id": "landsat-8|2023-06-26|path-130"
+    },
+    {
+      "date": "2023-06-27",
+      "rows": 38188,
+      "observed_area_weighted_median_c": 45.0232,
+      "physical_acquisition_id": "landsat-9|2023-06-27|path-129"
+    },
+    {
+      "date": "2023-07-04",
+      "rows": 1266,
+      "observed_area_weighted_median_c": 29.8164,
+      "physical_acquisition_id": "landsat-9|2023-07-04|path-130"
+    },
+    {
+      "date": "2023-07-05",
+      "rows": 95989,
+      "observed_area_weighted_median_c": 37.8624,
+      "physical_acquisition_id": "landsat-8|2023-07-05|path-129"
+    },
+    {
+      "date": "2023-07-20",
+      "rows": 19995,
+      "observed_area_weighted_median_c": 32.7064,
+      "physical_acquisition_id": "landsat-9|2023-07-20|path-130"
+    },
+    {
+      "date": "2023-07-28",
+      "rows": 62974,
+      "observed_area_weighted_median_c": 36.0902,
+      "physical_acquisition_id": "landsat-8|2023-07-28|path-130"
+    },
+    {
+      "date": "2023-07-29",
+      "rows": 16932,
+      "observed_area_weighted_median_c": 37.3224,
+      "physical_acquisition_id": "landsat-9|2023-07-29|path-129"
+    },
+    {
+      "date": "2023-08-05",
+      "rows": 9151,
+      "observed_area_weighted_median_c": 41.2839,
+      "physical_acquisition_id": "landsat-9|2023-08-05|path-130"
+    },
+    {
+      "date": "2023-08-06",
+      "rows": 621,
+      "observed_area_weighted_median_c": 32.4979,
+      "physical_acquisition_id": "landsat-8|2023-08-06|path-129"
+    },
+    {
+      "date": "2023-08-13",
+      "rows": 104998,
+      "observed_area_weighted_median_c": 39.5202,
+      "physical_acquisition_id": "landsat-8|2023-08-13|path-130"
+    },
+    {
+      "date": "2023-08-14",
+      "rows": 54784,
+      "observed_area_weighted_median_c": 41.9418,
+      "physical_acquisition_id": "landsat-9|2023-08-14|path-129"
+    },
+    {
+      "date": "2023-08-21",
+      "rows": 87355,
+      "observed_area_weighted_median_c": 34.077,
+      "physical_acquisition_id": "landsat-9|2023-08-21|path-130"
+    },
+    {
+      "date": "2023-08-22",
+      "rows": 8762,
+      "observed_area_weighted_median_c": 36.0799,
+      "physical_acquisition_id": "landsat-8|2023-08-22|path-129"
+    },
+    {
+      "date": "2023-08-30",
+      "rows": 690,
+      "observed_area_weighted_median_c": 30.1821,
+      "physical_acquisition_id": "landsat-9|2023-08-30|path-129"
+    },
+    {
+      "date": "2023-09-06",
+      "rows": 151,
+      "observed_area_weighted_median_c": 28.2219,
+      "physical_acquisition_id": "landsat-9|2023-09-06|path-130"
+    },
+    {
+      "date": "2023-09-07",
+      "rows": 1343,
+      "observed_area_weighted_median_c": 38.2213,
+      "physical_acquisition_id": "landsat-8|2023-09-07|path-129"
+    },
+    {
+      "date": "2023-09-14",
+      "rows": 11402,
+      "observed_area_weighted_median_c": 33.5745,
+      "physical_acquisition_id": "landsat-8|2023-09-14|path-130"
+    },
+    {
+      "date": "2023-09-15",
+      "rows": 330,
+      "observed_area_weighted_median_c": 32.4312,
+      "physical_acquisition_id": "landsat-9|2023-09-15|path-129"
+    },
+    {
+      "date": "2023-09-30",
+      "rows": 1403,
+      "observed_area_weighted_median_c": 27.699,
+      "physical_acquisition_id": "landsat-8|2023-09-30|path-130"
+    },
+    {
+      "date": "2024-05-04",
+      "rows": 10279,
+      "observed_area_weighted_median_c": 27.4221,
+      "physical_acquisition_id": "landsat-8|2024-05-04|path-129"
+    },
+    {
+      "date": "2024-05-19",
+      "rows": 47834,
+      "observed_area_weighted_median_c": 36.7841,
+      "physical_acquisition_id": "landsat-9|2024-05-19|path-130"
+    },
+    {
+      "date": "2024-05-20",
+      "rows": 106411,
+      "observed_area_weighted_median_c": 38.3563,
+      "physical_acquisition_id": "landsat-8|2024-05-20|path-129"
+    },
+    {
+      "date": "2024-06-04",
+      "rows": 13651,
+      "observed_area_weighted_median_c": 16.44,
+      "physical_acquisition_id": "landsat-9|2024-06-04|path-130"
+    },
+    {
+      "date": "2024-06-05",
+      "rows": 11286,
+      "observed_area_weighted_median_c": 34.3265,
+      "physical_acquisition_id": "landsat-8|2024-06-05|path-129"
+    },
+    {
+      "date": "2024-06-12",
+      "rows": 1074,
+      "observed_area_weighted_median_c": 35.2665,
+      "physical_acquisition_id": "landsat-8|2024-06-12|path-130"
+    },
+    {
+      "date": "2024-06-13",
+      "rows": 30743,
+      "observed_area_weighted_median_c": 37.2335,
+      "physical_acquisition_id": "landsat-9|2024-06-13|path-129"
+    },
+    {
+      "date": "2024-06-20",
+      "rows": 219,
+      "observed_area_weighted_median_c": 16.4742,
+      "physical_acquisition_id": "landsat-9|2024-06-20|path-130"
+    },
+    {
+      "date": "2024-06-21",
+      "rows": 18198,
+      "observed_area_weighted_median_c": 35.2818,
+      "physical_acquisition_id": "landsat-8|2024-06-21|path-129"
+    },
+    {
+      "date": "2024-06-29",
+      "rows": 622,
+      "observed_area_weighted_median_c": 30.7837,
+      "physical_acquisition_id": "landsat-9|2024-06-29|path-129"
+    },
+    {
+      "date": "2024-07-06",
+      "rows": 16585,
+      "observed_area_weighted_median_c": 33.877,
+      "physical_acquisition_id": "landsat-9|2024-07-06|path-130"
+    },
+    {
+      "date": "2024-07-23",
+      "rows": 397,
+      "observed_area_weighted_median_c": 37.0302,
+      "physical_acquisition_id": "landsat-8|2024-07-23|path-129"
+    },
+    {
+      "date": "2024-07-30",
+      "rows": 14075,
+      "observed_area_weighted_median_c": 24.7048,
+      "physical_acquisition_id": "landsat-8|2024-07-30|path-130"
+    },
+    {
+      "date": "2024-07-31",
+      "rows": 15560,
+      "observed_area_weighted_median_c": 39.2074,
+      "physical_acquisition_id": "landsat-9|2024-07-31|path-129"
+    },
+    {
+      "date": "2024-08-07",
+      "rows": 56824,
+      "observed_area_weighted_median_c": 37.7804,
+      "physical_acquisition_id": "landsat-9|2024-08-07|path-130"
+    },
+    {
+      "date": "2024-08-08",
+      "rows": 17052,
+      "observed_area_weighted_median_c": 34.846,
+      "physical_acquisition_id": "landsat-8|2024-08-08|path-129"
+    },
+    {
+      "date": "2024-08-15",
+      "rows": 418,
+      "observed_area_weighted_median_c": -1.3645,
+      "physical_acquisition_id": "landsat-8|2024-08-15|path-130"
+    },
+    {
+      "date": "2024-08-16",
+      "rows": 830,
+      "observed_area_weighted_median_c": 28.1211,
+      "physical_acquisition_id": "landsat-9|2024-08-16|path-129"
+    },
+    {
+      "date": "2024-08-23",
+      "rows": 52017,
+      "observed_area_weighted_median_c": 39.5714,
+      "physical_acquisition_id": "landsat-9|2024-08-23|path-130"
+    },
+    {
+      "date": "2024-08-24",
+      "rows": 96946,
+      "observed_area_weighted_median_c": 44.6284,
+      "physical_acquisition_id": "landsat-8|2024-08-24|path-129"
+    },
+    {
+      "date": "2024-08-31",
+      "rows": 5859,
+      "observed_area_weighted_median_c": 32.9337,
+      "physical_acquisition_id": "landsat-8|2024-08-31|path-130"
+    },
+    {
+      "date": "2024-09-01",
+      "rows": 51812,
+      "observed_area_weighted_median_c": 42.1384,
+      "physical_acquisition_id": "landsat-9|2024-09-01|path-129"
+    },
+    {
+      "date": "2024-09-08",
+      "rows": 37567,
+      "observed_area_weighted_median_c": 37.6779,
+      "physical_acquisition_id": "landsat-9|2024-09-08|path-130"
+    },
+    {
+      "date": "2024-09-09",
+      "rows": 1500,
+      "observed_area_weighted_median_c": 42.0837,
+      "physical_acquisition_id": "landsat-8|2024-09-09|path-129"
+    },
+    {
+      "date": "2024-09-17",
+      "rows": 6146,
+      "observed_area_weighted_median_c": 38.5136,
+      "physical_acquisition_id": "landsat-9|2024-09-17|path-129"
+    },
+    {
+      "date": "2024-09-24",
+      "rows": 65,
+      "observed_area_weighted_median_c": 14.2832,
+      "physical_acquisition_id": "landsat-9|2024-09-24|path-130"
+    },
+    {
+      "date": "2024-09-25",
+      "rows": 2458,
+      "observed_area_weighted_median_c": 34.3863,
+      "physical_acquisition_id": "landsat-8|2024-09-25|path-129"
+    }
+  ],
+  "initial_date": "2024-08-24",
+  "source_sha256": {
+    "static": "e619d5ed441d5be4de88660fd59464bfef86ae9ccf37ecc917258ce791dd8f54",
+    "valid_labels": "8ce8a26ea5aa39b03fd91ea25d2a12e05d766f3b13a48953877bfe081a6371d2",
+    "grid_support": "7fbbdc5f77860e8fb249ff095a3dd5b42a78d069260d4ae8477b7edf709356ab"
+  },
+  "file_sha256": {
+    "dates/2021-05-03.bin": "48dda066889b6b5ffa7d1cff16561dcd0b75a819f19f50c866f4b4df07c9032b",
+    "weather/2021-05-03.json": "533a3aa6ca7eb51479e95ab508167a0d8718300b443c52a01916da0b967dd654",
+    "dates/2021-05-19.bin": "e8f0d6d57d063710318e3e7909f2b2153547a51cc5bbf720b3646c967c56eb92",
+    "weather/2021-05-19.json": "97a7d33f1feb913fad84bc3584f1a03904ddfa14ffd867439c2dc88e6846bf72",
+    "dates/2021-06-04.bin": "dbdd66c2d040a0076e633828b9562a805299e00efcb7b8c41c235f70ee7e34f9",
+    "weather/2021-06-04.json": "212b45e1ba76f428b01732e003968a6664d1bfad90dc2ae2b314dfceeccefaa4",
+    "dates/2021-06-20.bin": "40b22d897ba57f1436ddd77edbe7f88963138619eff89a297fb5b84c583019eb",
+    "weather/2021-06-20.json": "bceb116fe981d1a9eda88c6b3440717c622ea92f97649804e643459d8ddc085c",
+    "dates/2021-06-29.bin": "27b02378c13f2b76230c37a5ef0f0fff5f0132ed098a229d13bd23614968267a",
+    "weather/2021-06-29.json": "8dff610f3668351d93ed7638f025742f522a03ca2555a47a7a16975b59a831d2",
+    "dates/2021-07-22.bin": "bfdf33cdc69e8f29e3ec4f5040fc63f7f9e527cbf22a9b596591eda18a2fc31b",
+    "weather/2021-07-22.json": "b3e3d5d5de0b5361f68754a3a710de71cf60629f035ab4a658a72760d3624287",
+    "dates/2021-07-31.bin": "7a8489ec1c55310d2836919a99faedb6840a90e9b7ed2d3b0fb5fd367f31b2aa",
+    "weather/2021-07-31.json": "a621e179592b047b5a4b4c0b8a2cc364c150b4950f7b73601a414fc649658380",
+    "dates/2021-08-07.bin": "cfee8a13b4e2204372928eabbed630fdcfdb3cc4f80f378a6aee4b3c80f0219f",
+    "weather/2021-08-07.json": "00602840e8e6940eeaa28401c1c557f44b0f715233885c257bd34f7736ca98d0",
+    "dates/2021-08-23.bin": "61822cdcf81cf354739cc16e690c51655dcdc626399cfaea43bb195995877ac6",
+    "weather/2021-08-23.json": "c46c2addf56b9cebcb667ed9806637504a80ae4f6a71321e9eb101e17079c8c0",
+    "dates/2021-09-24.bin": "1a890d474dfc47a066231992996bd5163b60ffdad7b7827b67febcf2350001cb",
+    "weather/2021-09-24.json": "4a964574b4cd793593326c08f8f4d6bc109f2f3c9aa780006555b48d858aec4b",
+    "dates/2022-05-06.bin": "ca1ac910007b49a8bd9451db9829fa7977b9af75a6c79bf15673769042ad24cb",
+    "weather/2022-05-06.json": "d583a1f2e9c39f8317bc939cd591b5f049a005edd8c32c545889e0b1b0e9dd8a",
+    "dates/2022-05-07.bin": "3efd0c02ec76836b70e334ec3c212d8b40a73e5dad25587fbb7757d859412374",
+    "weather/2022-05-07.json": "a3f7c17f76823f2603e640afff6a71f08b0360a253355c8a06f4e343c1c5493a",
+    "dates/2022-05-22.bin": "ecfe8340b15fd98f6cc7ef0365d9ded3920d630e035104d60378711867856462",
+    "weather/2022-05-22.json": "1739f9714788a0eb56b0bf78d632b205ba0f4345a2b2a36400e2be54eba5a5a1",
+    "dates/2022-05-23.bin": "3d487883611f4ad550b9052f00d3e38775c8bbb5e4fb928661951dd176e814b4",
+    "weather/2022-05-23.json": "275ca109216b65828a8405642bfa520f35866694ef320fefee412069ccaa8dce",
+    "dates/2022-05-30.bin": "8c8a23762efb7bcbc5357495a115de04fb2b8f39ae435deefa7e46e83daae0b4",
+    "weather/2022-05-30.json": "4bbed2b00271044a5e19795714c27ac3a6aa33006e84ddd8b096482c644f8a68",
+    "dates/2022-06-07.bin": "e6815d327d6bf8b6be793e5674e67d098c73475b746eb2f657bbbc81afffc704",
+    "weather/2022-06-07.json": "866daa5d97dd54fc3cd94a6423c961bb373707dc04a1eb1363fae77e09085bb6",
+    "dates/2022-07-02.bin": "76e971033cb901cd68494cba956feb0de54e23188484a3776ef50fdf57453b71",
+    "weather/2022-07-02.json": "a374b89728014c6e3461f42df87de492766e0f8a581265287a0a33bf25e3f665",
+    "dates/2022-07-09.bin": "bf430d2385efdf91a1588c72256e8bc3e7f74eb82e953d00553146fc85d8274d",
+    "weather/2022-07-09.json": "a69c094c28acb5fb270d9c6d94b9a53a768d854ca9e8fd97e6f73b79703711da",
+    "dates/2022-07-10.bin": "ec8d5e2ebee8b5f5bc4e2a4cfa84413db9a1668d734b3fe37d776d67834c3e79",
+    "weather/2022-07-10.json": "9e97823f858966d7124be940d5674701fd01864b8cae319519f15ac8b20005bd",
+    "dates/2022-07-17.bin": "dd25f413a922ef859cc49491c93cc2a6210caeb05283ef390088a07229193895",
+    "weather/2022-07-17.json": "7e16e272953214c99dd82f3e370f4cd0e18d9eed7d7b2ef03525d994c6afdd49",
+    "dates/2022-07-25.bin": "d5f8024a1417f6d410cf9c1b00830f12d22fe32665d788fb4f7be30a63796810",
+    "weather/2022-07-25.json": "6b424ae2e64acfb7fc4a625829838dae19e6bfeac02d7431ae272497d2b14f58",
+    "dates/2022-07-26.bin": "d4ad4965b959d200deef4fae245cfbac617da538973e244dda13ecc4e565d65d",
+    "weather/2022-07-26.json": "ca263fb6b742e3e6948f47d68929841d491cb9279922295bba78577868665fdc",
+    "dates/2022-08-02.bin": "aed9d84a941881bdc5e99d7445ab3d458cf78c942015d25390ff44fe639ff5a0",
+    "weather/2022-08-02.json": "6beb047040dee940b2403302861c8658b785e6682c9f705da597489f90f020e5",
+    "dates/2022-08-03.bin": "f266f4c0140bc92a4d0157933a83ca338c0dca3aa872fee4faa2e750ea62435d",
+    "weather/2022-08-03.json": "2a8cd08ce901b52fdc37a9827f8156b2a061ea0e905e01917feb6976e4ac1ec8",
+    "dates/2022-08-10.bin": "4fd23cf26f998434e5f4d874db7f6f4fb31374553b80cb32cb0ee64257194d43",
+    "weather/2022-08-10.json": "1c2f98439080bfae28af231723510ceebbc16869d06782fec41562db5ddfbf98",
+    "dates/2022-08-11.bin": "f61eed564013f4855fd7192efd723e971c249777b086195a16dd513e6b0b7a1f",
+    "weather/2022-08-11.json": "edba1ff79f9d52c4dc5c9f3528a706279d7bc8205dae8da549e7889883f8c8a8",
+    "dates/2022-08-18.bin": "3f62f9da0f05a4e4b2dc4eb005436dead413c80368bb1071d0fb44a7e0fb419b",
+    "weather/2022-08-18.json": "56a8998decc5e147cdf45d352ddc77004bee61872f769ed2fd44d7860339f57e",
+    "dates/2022-08-27.bin": "cb1ae3f98ae97354f9574e6cf735a4c7001429de289156ea274e3533343e77ff",
+    "weather/2022-08-27.json": "64f84450be41e3c5901b50b0ac8768188305fbb5f20b6eb5c83686bcfb05e6ab",
+    "dates/2022-09-11.bin": "fd886b8ece28cdfbe08dd9073bbf98c307837634f13c22ea874cc8e58a854fa5",
+    "weather/2022-09-11.json": "4bfe584459f1d9f355612a5c6379a4461e3f7b0e947546e2af2628efc8bd45e9",
+    "dates/2022-09-19.bin": "af7bce769de8b8eb528efa6f764c3629201cec166f9772d6bf2e3ebb9e65f4c0",
+    "weather/2022-09-19.json": "a5284185e1fbc0c2a859a84a0d9a2c6d9baab3d00935aede3b41478692f480bc",
+    "dates/2022-09-28.bin": "ebc0ae73162557202a78f7ab386fe02253b650fb9926759604a2807087e74bdf",
+    "weather/2022-09-28.json": "adf6dde3a8d4507c72f553592460105c7ebace34414bf6be628ff9f208226178",
+    "dates/2023-05-01.bin": "76fb026509c1213d0cafa3dd35a868c4e62de63232148311d3c18b305401b617",
+    "weather/2023-05-01.json": "19725714eae0bd987d4fd94f9f301c25d83989214198f12cbf8556f3d2058e70",
+    "dates/2023-05-17.bin": "ac77e006cb894833e17dd97930ce2caed41d6d4e4a7f61007ca194535736e6a0",
+    "weather/2023-05-17.json": "a151e17000f2bbe1664a261eb7a2298ec2c7e7de41836f70e5f06707cf5683f8",
+    "dates/2023-05-18.bin": "9b07171989e5c3272117cd6fc05b34fa592493edc8ad0cdd6414d5c208573c79",
+    "weather/2023-05-18.json": "f14e804e31177c57f472deeb884e6f41f41491fbe6a7ba19ba51c6e5166d08b0",
+    "dates/2023-06-10.bin": "5068ea8cd43020145e2b7563df1fb252f629409b6c160d58bc6da8f313663fc8",
+    "weather/2023-06-10.json": "df9ac8d4d89935f63051dd109879006b4d9f5d4d5e1020d01e9a96ebf40af5d8",
+    "dates/2023-06-18.bin": "1e364e122dfef2d60ac205703891cc9d98ee05efd199951f1b3e2d04bd74b015",
+    "weather/2023-06-18.json": "740ea01b512430725ad845e58b7c1e2782b739847a28017e4990e42804e9ebbc",
+    "dates/2023-06-26.bin": "afa4796eb447e1acdb0c81dfce4227273ab3241e3ad00a2bfa4206ced18c8fab",
+    "weather/2023-06-26.json": "ee24e4397a38bb56575d4c2af0fa6808a4a18475db88f9e91dae4b91ba01611e",
+    "dates/2023-06-27.bin": "eebd5514f4bb8972434ab014a60c6f4e89049fe3f7a5ca61e5bbcaeedd6c3ac3",
+    "weather/2023-06-27.json": "6ce46f4b5c9ed262fcffc6d06722c8b4975eb9e63353633ddc16ca6f34362195",
+    "dates/2023-07-04.bin": "db63ff3a2efeba73aefef6bf8be8d8e359b26b3bc774d6f00d458286337e69d5",
+    "weather/2023-07-04.json": "480eac3d93c8d6e35b2a17f7eca4d4313e3d56ff16d9405e3a4bc026a447af7d",
+    "dates/2023-07-05.bin": "bc25d8413f7e1d2df3bd0c130271cc23a9d090765201b2a64f05b6717e2d7cb1",
+    "weather/2023-07-05.json": "1c5a971dd9ac988bf9ff22b16de849040c1ac1db50dd1d07893dfff9bdd3bdda",
+    "dates/2023-07-20.bin": "4793a4a10d2741d7922d18e2288bbbc18ec60f024027f708da96f165f6ff65d6",
+    "weather/2023-07-20.json": "b12dc0d2bd79c3b9a56a14116d07ebd017f5f200a800c4178582027ccafa5034",
+    "dates/2023-07-28.bin": "f2a3e38b0c06fd7fd5acc6d6283bf1ff8832babe2dd59e6fbe65a578f710cef5",
+    "weather/2023-07-28.json": "270f21fb9ea5f479afcea1efa3305a99bbb2ce3dbf4c7815f1ea5fb07f8cfe92",
+    "dates/2023-07-29.bin": "c2954c6de0dc02f71ec50550cc749bab7da4dfacdabd4476e6c618f4d60fb8b4",
+    "weather/2023-07-29.json": "c84cf726d77e8eb053a249eb4134e5f69987a537c68c1e83a0197e2c8334a126",
+    "dates/2023-08-05.bin": "ca50a21c738ed924542e68ae40f201464cfbffa591670cf68702b9d702b43d53",
+    "weather/2023-08-05.json": "cb64a204a6b7bb4d8724784fc37f902f04cf639fdfbaae7c31bce985c9447a8c",
+    "dates/2023-08-06.bin": "983bf2745e1078a703c3bf9e3c8d7fea8d71e7ebb03f5d79737a37d4f237fa64",
+    "weather/2023-08-06.json": "8fdd5dd11978173911759e4f1da9a9d664d9ce02a694a9bee963618f00fd64b4",
+    "dates/2023-08-13.bin": "4bbfcad583d9ce557997ecc77c4f5547a5545e6d7a0d4d6e167ad021f6b1c623",
+    "weather/2023-08-13.json": "fcb940a2a420179959755496e9a9671f513098bd68dbc982bef51c64088eb663",
+    "dates/2023-08-14.bin": "6337766234dcc3892dc527a621bde2eb7457ec6426758c6ae94df5eb0f83a200",
+    "weather/2023-08-14.json": "ecbc76869b5ae5c4ff6c58c94260e171dd3667daa6cd49ef350b026fed9aa636",
+    "dates/2023-08-21.bin": "4e90673f846c27061b209dcdbc66725004b2c56c851216faad1865f3fa2b29d8",
+    "weather/2023-08-21.json": "863c0c07260db299599eb8e03f58bdfa4fd8e2730a4412f710618b7c94f04696",
+    "dates/2023-08-22.bin": "5763f773a98680481af53ab1b5deff899e8d1ac0febe40195d872d9c88e3c4a3",
+    "weather/2023-08-22.json": "9e4b8762562ae51762ac6d9312fb3d5618af803ba64497845c836d57deaa43e3",
+    "dates/2023-08-30.bin": "93caa7421ba25099fa13e6d31a1da591dc22b0487618d04af71b208f353d634f",
+    "weather/2023-08-30.json": "e384fbaba3507dcefd9460208edb8e930421ad3b71dddc4958208a246d368eba",
+    "dates/2023-09-06.bin": "9dc31d2a718427ef17a5bfeeaadec444e42f5020c35f382520ecf0dcaf33748e",
+    "weather/2023-09-06.json": "40e1459d7e505b502ba05438192004047563f532956194b3427ec23e4cfde51f",
+    "dates/2023-09-07.bin": "4d997a62d1a5855f30d6917e6708d7bc53cb70f9fd4e4a916744b54f2278ad9c",
+    "weather/2023-09-07.json": "0b85e451646bcaea5946bbc8dbcc75e559e254576de994749a024e9c887fe826",
+    "dates/2023-09-14.bin": "dd5d122560ccaac5f97bef9e575c0c75f10194692d6b57917b5f9f80333732e7",
+    "weather/2023-09-14.json": "ca9d35e2ee76a465ad5c2aebf9db8c0865032be57b31c5f3f7ff5c4882a3d401",
+    "dates/2023-09-15.bin": "a70371b1bd1786ae668438e4c832c5f07cecec19fd912ca9766544133614bd7d",
+    "weather/2023-09-15.json": "585a4704650b56c9dce476509bc7c4bf5712989fbd85f1a7641eead9592207a0",
+    "dates/2023-09-30.bin": "81ca6cfbab02aed084e8c5fb6261f9e96c90104ecded1734a5726ddc8a7d93f0",
+    "weather/2023-09-30.json": "4499607fe21027fc17e667fc9a02ace9446ef8a1aee29e4f9dcf28334bcc52b5",
+    "dates/2024-05-04.bin": "0aaf6f7812d870a525407817cc6297ee333267a5bf9977b951c46ac39c179756",
+    "weather/2024-05-04.json": "7cf68e507af60c8444e046a46f82fb53990c90be548e31b02c73d1c8138f7942",
+    "dates/2024-05-19.bin": "f87bc921a51854167a4f06c90ec3fa01703f9ecccd893c1f72a057747ff0a7dc",
+    "weather/2024-05-19.json": "98dfa221483594c55fef9ad571f78a6e8600887f63cd43f3f98baf1a282648f6",
+    "dates/2024-05-20.bin": "ad2e7196fb13b1a66c1cbdb7cd745c516efa325507b75a341a265a984946f9a5",
+    "weather/2024-05-20.json": "35b6dda7f89c834ae89b428da0e04b5f7fa26a4f53dc810f1fd24ebd4e3e5209",
+    "dates/2024-06-04.bin": "c62a00753bf5bfc3eba8b8aa0f9c8398e9e51ac2e0a621600c1cae61a9af7b60",
+    "weather/2024-06-04.json": "9cefae1435df0b1ebd9b50458697c000711d0e7551fdd2d09c5a7ca456669f9b",
+    "dates/2024-06-05.bin": "b0914593fa1157778c670877894b4402aa954c7a8f0a4f6bd1bfdfb288a2545b",
+    "weather/2024-06-05.json": "032f537ba6b496fe80da75fd20037df2395f43cc6975dea07ba43fa49ed44025",
+    "dates/2024-06-12.bin": "84ca0e7bad1d324848c3c8b005a93fa6d61a2e4a0120b89b8df5ba1152e6efea",
+    "weather/2024-06-12.json": "7c1cf132865e10bb819f3e236bf52b5444fd3a50f96a19a51da5db3e9a902f60",
+    "dates/2024-06-13.bin": "9f91ff639fc5aaa9c7e32802b468f9118ee7d52413d8737e1588f9bfa13aef8d",
+    "weather/2024-06-13.json": "d0dd7e64bcc036ae77e589ea6256149df606c433732588ea24302bd58b1710c8",
+    "dates/2024-06-20.bin": "7e7dda26b548da2b4dc370a9eaa9b294f931dee2fea95fa37fda829563df29b9",
+    "weather/2024-06-20.json": "f526226f5b5c5834a867d6786b2643934fc1d21352730037d10c7f15735a8f0d",
+    "dates/2024-06-21.bin": "3e1fed383dd5800d2a185e71cd6cedad9068d13bdccafe0a3e6eda2bc797325f",
+    "weather/2024-06-21.json": "e7d9af070d69ba6e3271635a562f8f0249aa04f9b36c8a617f0f98dd52f42920",
+    "dates/2024-06-29.bin": "fbc34d6347549a148f220a89a4acce0083cfea689283087c1209a7f47857aa31",
+    "weather/2024-06-29.json": "d100541367bd63270d206f2f937ec417409902e75072b196867cb134e1bf58b0",
+    "dates/2024-07-06.bin": "e346c7ddc1de5a5e13156d050c6a1024f5cd824cc42556d46b3f50a90ffa02a4",
+    "weather/2024-07-06.json": "963d5bcf9d76ecc2737a31784d1035606668e99a49ccf93efa4b2631b3b6fd0a",
+    "dates/2024-07-23.bin": "0d71f45fdd0f20ba1af9b9aa47b3f4da786d6a85a64b4a3889166e76d9bd2538",
+    "weather/2024-07-23.json": "462857d8c5172cc1433aba9e3569ab19d5ea5891b00c2515fb35b8d1a607101b",
+    "dates/2024-07-30.bin": "1a10111eb7fc90cd67fde96d8b00c1594a2bb118d78b2f32b0975365294f8f2b",
+    "weather/2024-07-30.json": "73f7a080748f9a24c9a3909fd35f97b99433ec52c62638822fff9e6be7532085",
+    "dates/2024-07-31.bin": "fa5e7189575e452e68573f9856f17584fe92c87d23aa2fdb24acf85410039d13",
+    "weather/2024-07-31.json": "988712917814031cc38b7ee8305a4c3baf817f7eff5b2c5b2a0084f9f7a7c381",
+    "dates/2024-08-07.bin": "5b7b4a1bb9fc218345b4ee75c9bfabafa9ceba3edaeb0ab2d544f0afbd8f75c8",
+    "weather/2024-08-07.json": "71c0c254e0629bcbca9ff6546ce66df4f07b4ff814867af4afbcc005384fc670",
+    "dates/2024-08-08.bin": "d37361f6ff4d6c9083578b48b20bd1a8f572919bf855e361fcfe450c9197236d",
+    "weather/2024-08-08.json": "17c5a8c99cb304a2af2707f02c64d3be249ce1c19e92a610eb9bc575d6b314e0",
+    "dates/2024-08-15.bin": "a5a71ad0a64b42ffca4b3afc84010fe7c48b0e272907e46f5a81370688ba230c",
+    "weather/2024-08-15.json": "2af53ed1d799c47faf5510eb73c8b56f85f88a1c9d67a64fe28866c02bbcb861",
+    "dates/2024-08-16.bin": "31e2dfce14097e0264e7277f8ad39b56e12024b33e9a2055ab92cf0ddf6bc272",
+    "weather/2024-08-16.json": "0570b85596664c12dce089a7e0bae8739dedfb7772d66e765ae69f6570970c13",
+    "dates/2024-08-23.bin": "4350abb5f34851fbd5ba4bf64b60ef533782cccdd9199bc60cef9fa71ac81781",
+    "weather/2024-08-23.json": "9727a26fbfbcace293b0023b4b01860cfab17147cb57393b5b1ace84d6358aac",
+    "dates/2024-08-24.bin": "14f05bda03c8a016d1fb0657b91516a8f043728c213b1983ca72c5ecd25c7e6e",
+    "weather/2024-08-24.json": "37d5468a47b8017541666ece955ee9b19dbf56c7aa0d801791cd31fb4ccb53e1",
+    "dates/2024-08-31.bin": "4db15580204dd14d40344fa10e79a74752d275be0c0fed8abf1e88050dd21f1b",
+    "weather/2024-08-31.json": "ae9597cf08ecb4b82940570b1375b482ff630f6e0c1a0341ac1e4739ccef23cb",
+    "dates/2024-09-01.bin": "cc3d2c736ab16875288749f918373f1084211ee163b06a0ce52049e6b917ff2a",
+    "weather/2024-09-01.json": "7834330e0ddccd87e64c815c833b2add28e03dcd9ff18f6e490d4357879fefa0",
+    "dates/2024-09-08.bin": "cad84cb6031119244cb5fe00c9f06fcb6f95772b021c31620495f4c0e0abdc5d",
+    "weather/2024-09-08.json": "4d9e5f6d1ac4bbc466f91fd036d438b55d789c62513a407d3fb25a962f1f6a50",
+    "dates/2024-09-09.bin": "24491eee163a327e091fc9919bb2274159d14a8edec0ebd7ee584441eb2dbddc",
+    "weather/2024-09-09.json": "8293ed2722998cd0b972903b70b5cc10e4d89ebdb817510eb49347e0d2c6248f",
+    "dates/2024-09-17.bin": "ea37073d177893d25de54c893d394d3ea1065e78e7d1ec096fd0205ec7b1b567",
+    "weather/2024-09-17.json": "fc3513f29a8140bc7b955423fc7e8f60d951a835b32bf301750d0c55ac0bc61a",
+    "dates/2024-09-24.bin": "51ea421f5b5922b24e74844294d9d1f2e789f4c70ce4eeee44f6ff887c9c1dee",
+    "weather/2024-09-24.json": "a0cf15165cf42394b33732ae5d78e306736509870899c64efd63b3a7b8b68e88",
+    "dates/2024-09-25.bin": "3cb45782fc40541a9805a8b11b0da9b22888e94e7b6998d4820c47f4c83ce43a",
+    "weather/2024-09-25.json": "f66486daf49319da51a7c4d672f887a4114d5360c5e04bcde27455ff9f63e8b7",
+    "applicable.bin": "45dd5cd4afe35a1e786c5995458224222b54b0b72ed51c86ef4f2260766b4509",
+    "bare.bin": "dfb16022e3ce7ce118643a9380fde27eb90fa1dd03857981c04af48ed0b89fde",
+    "built.bin": "4fce4940333a0ba574a7b5559f9bcf84cb8d52735d241570e998b08e14b47f3d",
+    "crop.bin": "89506a92d8b7c2a4466fea626427dbecb607cb5c26045a183effa94fbce6bc41",
+    "elevation.bin": "de31a020e0557318be7049c5a869c7b0c279f368846a85159af4dd15d586a956",
+    "grass.bin": "7499ef77c8d470885f8da03e5d9a0d8c0ae6bcd44ad15ad3a0eb01d838fc1445",
+    "grids.bin": "7f3a77440e9f0f6786b70583ec4c5c9e139cc9e0baf784b05d3762d5fd3ab155",
+    "mangrove.bin": "446baa4abfe98ebc4b22b59163a6f0eaaa0407856158cd3ee720caf480c49118",
+    "moss.bin": "6a24bef75e935b7f7c6592802b7975afa73faa068a5340d2493343cf8e7b6311",
+    "shrub.bin": "d396d27a9463916b4b87ec67bd6140cc772e670a2aa39b9c1fc67140f3eb31ab",
+    "slope.bin": "d4b93e962737fab2f86d94c9b402f500c53acca066520d66ab04f189c8f2ccb0",
+    "snow.bin": "413157c72e525dc4aa8630d69aa286873954eeae622500482b394c486966386c",
+    "support.bin": "bbd87744d5796c26de4978feffa441cb9901000c870e46c1b342a3e7b4f97089",
+    "tree.bin": "62df33264803e087c1bc5740b08c7a8218226a6b32bc2352ed357d08d6d71c42",
+    "weather-index.bin": "bc491b989233bf6b4f0d1bd0dbd8d369fe0a4bd0c7dece3d60c821519853ab00",
+    "wetland.bin": "63ee2674bf19290501c6e172cec8ab539a5ab00b4074c30d4f6593bb9caaea94"
+  },
+  "meaning": {
+    "relative": "observed grid LST minus the eligible-land-area-weighted median of QA-observed grids on that same physical date; not the unknown all-city true median",
+    "weather": "ERA5-Land background at approximately 9 km, mapped to grid centers; not local 250 m measurements",
+    "grid": "fixed 250 m technical OSM boundary grid; not government-certified administrative statistics"
+  }
+}
