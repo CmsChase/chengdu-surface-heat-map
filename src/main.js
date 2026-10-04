@@ -3,6 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import './style.css';
 import { layers, layerById, weatherFieldIds, decodeValue, displayValue } from './layers.js';
 import { canvasFrame } from './map-geometry.js';
+import { gridIdentity, decodeBlock, historyRows, historySummary, parseWgs84, encodeView, decodeView, dataStatus, inResearchBoundary } from './history.js';
 
 const base = `${import.meta.env.BASE_URL}data/`;
 const $ = (id) => document.getElementById(id);
@@ -21,6 +22,14 @@ const state = {
   date: null,
   selected: -1,
   generation: 0,
+  historyMeta: null,
+  lattice: null,
+  historyBlocks: new Map(),
+  historyExpanded: false,
+  staticExpanded: false,
+  selectionGeneration: 0,
+  opacity: .86,
+  boundary: null,
 };
 
 const map = L.map('map', {
@@ -125,12 +134,21 @@ function updateLabels() {
   $('legend-min').textContent = layer.min;
   $('legend-max').textContent = layer.max;
   $('legend-unit').textContent = layer.unit;
-  $('date-info').innerHTML = date ? `<strong>${date.rows.toLocaleString('zh-CN')}</strong><span>格当日有合格观测 · 正土地格的 ${(date.rows / state.meta.positive_land_grid_count * 100).toFixed(1)}%<br>可观测子集参考中位数 ${date.observed_area_weighted_median_c.toFixed(2)} °C</span>` : '';
-  $('map-footnote').textContent = ['relative','observed','qa'].includes(state.layer)
-    ? `${state.date} · 仅显示该次过境的 QA 合格格网；空白为缺测。`
+  $('date-info').innerHTML = !date ? '' : ['relative', 'observed', 'qa'].includes(state.layer)
+    ? `<strong>${date.rows.toLocaleString('zh-CN')}</strong><span>格当日有合格观测 · 正土地格的 ${(date.rows / state.meta.positive_land_grid_count * 100).toFixed(1)}%<br>可观测子集参考中位数 ${date.observed_area_weighted_median_c.toFixed(2)} °C</span>`
     : weatherFieldIds.includes(state.layer)
-      ? `${state.date} · ERA5-Land 约 9 km 天气背景，不是 250 m 实测。`
-      : '静态公开特征 · 全部固定正土地格网。';
+      ? `<strong>${state.date}</strong><span>所选过境日期的历史天气背景；约 9 km 天气格点映射到 250 m 格网。</span>`
+      : '<span>静态特征不随日期变化；日期仅用于单格历史观测。</span>';
+  $('map-footnote').textContent = ['relative','observed','qa'].includes(state.layer)
+    ? `${state.date} · 仅显示该次过境的 QA 合格格网；空白为缺测。色标端点外的实际值以端点色显示，点选可读原值。`
+    : weatherFieldIds.includes(state.layer)
+      ? `${state.date} · ERA5-Land 约 9 km 天气背景，不是 250 m 实测；来源缺失保持空白。色标端点外饱和显示。`
+      : '静态公开特征 · 全部固定正土地格网；色标端点外饱和显示，点选可读原值。';
+  $('layer-notice').textContent = ['relative','observed','qa'].includes(state.layer)
+    ? '灰白空格表示当日没有合格温度记录，不是温度较低；具体缺测原因未逐格提供。'
+    : weatherFieldIds.includes(state.layer)
+      ? '天气是约 9 km 背景；来源缺失与有效零值分开显示。'
+      : '静态图层不依赖所选日期；空白不代表当日温度缺测。';
   $('date-select').disabled = false;
   $('year-select').disabled = false;
 }
@@ -166,6 +184,7 @@ async function ensureLayer(id, date) {
 }
 
 async function selectLayer(id) {
+  if (!layerById.has(id)) return;
   const generation = ++state.generation;
   state.layer = id;
   renderLayerList();
@@ -177,21 +196,24 @@ async function selectLayer(id) {
     $('map-loading').classList.add('hidden');
     heatLayer.redraw();
     renderInspector();
+    saveView();
   } catch (error) { showError(error); }
 }
 
 async function selectDate(date) {
+  if (!state.meta.dates.some(item => item.date === date)) return;
   const generation = ++state.generation;
   state.date = date;
   renderYearDateControls();
   updateLabels();
   $('map-loading').classList.remove('hidden');
   try {
-    await ensureLayer(state.layer, date);
+    await Promise.all([ensureLayer(state.layer, date), ensureDate(date)]);
     if (generation !== state.generation) return;
     $('map-loading').classList.add('hidden');
     heatLayer.redraw();
     renderInspector();
+    saveView();
   } catch (error) { showError(error); }
 }
 
@@ -236,6 +258,7 @@ const CanvasGrid = L.Layer.extend({
     const cell = Math.max(1.4, Math.min(65, 250 / (156543.0339 * Math.cos(30.7 * Math.PI / 180) / 2 ** this.map.getZoom())));
     const half = cell / 2;
     const count = state.meta.grid_count;
+    context.globalAlpha = state.opacity * .78;
     if (thermal) {
       context.fillStyle = 'rgba(234,230,219,.72)';
       for (let index = 0; index < count; index++) {
@@ -246,7 +269,7 @@ const CanvasGrid = L.Layer.extend({
         context.fillRect(x - half, y - half, cell + .3, cell + .3);
       }
     }
-    context.globalAlpha = thermal ? .93 : .86;
+    context.globalAlpha = state.opacity;
     let lastColor = '';
     for (let index = 0; index < count; index++) {
       const value = valueAt(index);
@@ -278,7 +301,6 @@ function nearestGrid(latlng) {
   let nearest = -1;
   let best = Infinity;
   for (let index = 0; index < state.meta.grid_count; index++) {
-    if (!state.applicable[index]) continue;
     const dlat = state.coords[index * 2 + 1] - lat;
     if (Math.abs(dlat) > .003) continue;
     const dlon = (state.coords[index * 2] - lon) * lonScale;
@@ -288,34 +310,160 @@ function nearestGrid(latlng) {
   return Math.sqrt(best) * 111.2 <= .23 ? nearest : -1;
 }
 
+function saveView() {
+  if (!state.meta) return;
+  const query = encodeView({ layer: state.layer, date: state.date, center: map.getCenter(), zoom: map.getZoom(), selected: state.selected, opacity: state.opacity });
+  history.replaceState(null, '', `${location.pathname}?${query}`);
+}
+
+function identityAt(index) {
+  return gridIdentity(state.lattice[index * 2], state.lattice[index * 2 + 1]);
+}
+
+function staticValue(id, index) {
+  const encoded = state.static.get(id)?.[index];
+  return encoded === undefined ? null : decodeValue(id, encoded);
+}
+
+async function ensureHistoryBlock(block) {
+  if (!state.historyMeta.blocks[block]) throw new Error(`历史块不在固定清单中: ${block}`);
+  if (!state.historyBlocks.has(block)) {
+    const request = getBuffer(`history/${block}.bin`).then(buffer => {
+      if (buffer.byteLength !== state.historyMeta.blocks[block].bytes) throw new Error('历史块长度不符');
+      return decodeBlock(buffer, state.meta.dates);
+    }).catch(error => { state.historyBlocks.delete(block); throw error; });
+    state.historyBlocks.set(block, request);
+  }
+  return state.historyBlocks.get(block);
+}
+
+function historyChart(rows) {
+  const valid = rows.filter(row => row.observed !== null);
+  const allTime = rows.map(row => Date.parse(`${row.date}T00:00:00Z`));
+  const begin = Math.min(...allTime);
+  const span = Math.max(...allTime) - begin || 1;
+  const x = date => 25 + (Date.parse(`${date}T00:00:00Z`) - begin) / span * 550;
+  const low = valid.length ? Math.floor(Math.min(...valid.map(row => row.observed)) / 5) * 5 : 0;
+  const high = valid.length ? Math.ceil(Math.max(...valid.map(row => row.observed)) / 5) * 5 + 5 : 50;
+  const y = value => 105 - (value - low) / (high - low) * 80;
+  const marks = rows.map(row => row.observed === null
+    ? `<path d="M${x(row.date).toFixed(1)} 110v6" stroke="#8b9c98" stroke-width="1"/>`
+    : `<circle cx="${x(row.date).toFixed(1)}" cy="${y(row.observed).toFixed(1)}" r="2.6" fill="#e2a36e"><title>${row.date} ${row.observed.toFixed(2)} °C</title></circle>`).join('');
+  return `<svg viewBox="0 0 600 143" role="img" aria-label="不规则日期的实际地表温度散点；底部短线是缺测日期，无连线或插值"><path d="M25 25v80h550" fill="none" stroke="#8fa5a0"/><text x="0" y="28">${high}°</text><text x="0" y="108">${low}°</text>${marks}<text x="25" y="137">2021</text><text x="540" y="137">2024</text></svg>`;
+}
+
+function historyMarkup(index) {
+  const identity = identityAt(index);
+  const cached = state.historyBlocks.get(identity.block);
+  if (!cached || !state.historyData || state.historyData.index !== index) return '<p class="history-wait">正在读取该空间块的历史观测…</p>';
+  const rows = state.historyData.rows;
+  const summary = historySummary(rows);
+  const distribution = object => Object.entries(object).sort().map(([key, count]) => `${key}: ${count}`).join(' · ') || '无';
+  const table = rows.map(row => `<tr class="${row.observed === null ? 'missing' : ''}"><td>${row.date}</td><td>${row.observed === null ? '缺测' : displayValue('observed', row.observed)}</td><td>${row.relative === null ? '—' : displayValue('relative', row.relative)}</td><td>${row.qa === null ? '—' : `${row.qa}%`}</td></tr>`).join('');
+  return `<div class="history-summary"><strong>${summary.count} / 82</strong> 个日期有合格观测<br>年份：${distribution(summary.years)}<br>月份：${distribution(summary.months)}</div><div class="history-chart">${historyChart(rows)}<small>按真实日期间隔排列；点为实际观测，底部短线为缺测。没有连线、插值或趋势。</small></div><div class="history-table-wrap"><table><thead><tr><th>日期</th><th>地表温度</th><th>同日温差</th><th>有效土地像元</th></tr></thead><tbody>${table}</tbody></table></div><small>温差参照：当日 QA 可观测格网的固定非水土地面积加权中位数。温度显示至 0.01 °C、比例至 1 个百分点；参照中位数保存至 0.0001 °C。</small>`;
+}
+
+async function expandHistory(index) {
+  const generation = state.selectionGeneration;
+  state.historyExpanded = true;
+  renderInspector();
+  try {
+    const identity = identityAt(index);
+    const block = await ensureHistoryBlock(identity.block);
+    if (generation !== state.selectionGeneration || state.selected !== index) return;
+    state.historyData = { index, rows: historyRows(block.get(identity.slot), state.meta.dates) };
+    renderInspector();
+  } catch (error) {
+    if (generation !== state.selectionGeneration) return;
+    state.historyError = error.message;
+    renderInspector();
+  }
+}
+
+async function ensureInspectorStatic(index) {
+  const generation = state.selectionGeneration;
+  const ids = layers.filter(layer => layer.group === '土地与地形').map(layer => layer.id);
+  await Promise.all(ids.map(id => ensureLayer(id, state.date)));
+  if (generation === state.selectionGeneration && state.selected === index) renderInspector();
+}
+
 function renderInspector() {
   const target = $('inspector');
   if (state.selected < 0) { target.classList.add('hidden'); return; }
   const index = state.selected;
   const value = valueAt(index);
-  const obs = state.dates.get(state.date)?.temperature[index];
-  const built = state.static.get('built')?.[index];
-  const tree = state.static.get('tree')?.[index];
-  const elevation = state.static.get('elevation')?.[index];
+  const identity = identityAt(index);
+  const obs = state.dates.get(state.date)?.temperature[index] ?? -32768;
+  const observedValue = decodeValue('observed', obs);
+  const staticIds = layers.filter(layer => layer.group === '土地与地形').map(layer => layer.id);
+  const staticRows = state.applicable[index]
+    ? staticIds.map(id => `<div><span>${layerById.get(id).label}</span><strong>${state.static.has(id) ? displayValue(id, staticValue(id, index)) : '加载中…'}</strong></div>`).join('')
+    : '<div><span>土地支持</span><strong>无适用非水土地</strong></div>';
   target.innerHTML = `
     <button class="inspector-close" id="close-inspector" aria-label="关闭格网信息">×</button>
-    <span class="inspector-kicker">250 M GRID / ${state.date}</span>
-    <h2>${displayValue(state.layer, value)}</h2>
-    <p>${layerById.get(state.layer).label}</p>
-    <div class="inspector-grid"><div><span>观测地表温度</span><strong>${displayValue('observed', decodeValue('observed', obs ?? -32768))}</strong></div><div><span>合格日期</span><strong>${state.support[index * 2]} / 82</strong></div><div><span>建成地</span><strong>${built === undefined ? '—' : displayValue('built', decodeValue('built', built))}</strong></div><div><span>树木类</span><strong>${tree === undefined ? '—' : displayValue('tree', decodeValue('tree', tree))}</strong></div><div><span>高程</span><strong>${elevation === undefined ? '—' : displayValue('elevation', decodeValue('elevation', elevation))}</strong></div><div><span>位置</span><strong>${state.coords[index * 2 + 1].toFixed(4)}°N<br>${state.coords[index * 2].toFixed(4)}°E</strong></div></div>
-    <small>单格是卫星与公开数据的格网汇总，并非站点实测。</small>`;
+    <span class="inspector-kicker">250 M GRID · ${identity.id}</span>
+    <h2>${state.applicable[index] ? displayValue(state.layer, value) : '不适用'}</h2>
+    <p>${layerById.get(state.layer).label} · ${dataStatus({ inRange: true, applicable: Boolean(state.applicable[index]), layer: state.layer, value })}</p>
+    <div class="inspector-grid"><div><span>${state.date} 地表温度</span><strong>${state.applicable[index] ? observedValue === null ? '当日无合格记录' : displayValue('observed', observedValue) : '不适用'}</strong></div><div><span>合格日期</span><strong>${state.support[index * 2]} / 82</strong></div><div><span>WGS84 格网中心</span><strong>${state.coords[index * 2 + 1].toFixed(5)}°N<br>${state.coords[index * 2].toFixed(5)}°E</strong></div><div><span>土地状态</span><strong>${state.applicable[index] ? '正土地格网' : '无适用土地'}</strong></div></div>
+    <details class="static-details" ${state.staticExpanded ? 'open' : ''}><summary>查看全部静态特征</summary><div class="inspector-grid">${staticRows}</div></details>
+    ${state.applicable[index] ? `<button type="button" class="history-toggle" id="history-toggle">${state.historyExpanded ? '收起' : '展开'} 82 次历史观测</button>${state.historyExpanded ? `<div class="history-content">${state.historyError ? `<p>${state.historyError}</p>` : historyMarkup(index)}</div>` : ''}` : ''}
+    <small>单格是卫星与公开数据的格网汇总，并非站点实测或人体热暴露。零值与缺失分开显示。</small>`;
   target.classList.remove('hidden');
-  $('close-inspector').addEventListener('click', () => { state.selected = -1; renderInspector(); heatLayer.redraw(); });
+  $('close-inspector').addEventListener('click', () => { state.selected = -1; ++state.selectionGeneration; renderInspector(); heatLayer.redraw(); saveView(); });
+  target.querySelector('.static-details').addEventListener('toggle', event => {
+    state.staticExpanded = event.target.open;
+    if (event.target.open && staticIds.some(id => !state.static.has(id))) ensureInspectorStatic(index).catch(showError);
+  });
+  $('history-toggle')?.addEventListener('click', () => {
+    if (state.historyExpanded) { state.historyExpanded = false; renderInspector(); }
+    else expandHistory(index);
+  });
 }
 
 map.on('click', event => {
   if (!state.meta) return;
-  state.selected = nearestGrid(event.latlng);
+  ++state.selectionGeneration;
+  const inside = inResearchBoundary(event.latlng, state.boundary);
+  state.selected = inside ? nearestGrid(event.latlng) : -1;
+  state.historyExpanded = false;
+  state.staticExpanded = false;
+  state.historyData = null;
+  state.historyError = null;
+  $('outside-status').textContent = state.selected < 0
+    ? inside ? '研究范围内未找到对应固定格网。' : '研究范围外；此处没有本地图的固定格网数据。'
+    : '';
+  $('outside-status').classList.toggle('hidden', state.selected >= 0);
   renderInspector();
   heatLayer.redraw();
+  saveView();
 });
 
 $('reset-view').addEventListener('click', () => map.fitBounds([[29.6, 102.8], [31.5, 105.5]], { padding: [25, 25] }));
+$('layer-opacity').addEventListener('input', event => {
+  state.opacity = Number(event.target.value) / 100;
+  $('opacity-value').textContent = `${event.target.value}%`;
+  heatLayer.redraw();
+  saveView();
+});
+$('coordinate-form').addEventListener('submit', event => {
+  event.preventDefault();
+  try {
+    const coordinate = parseWgs84($('coordinate-input').value);
+    map.setView([coordinate.lat, coordinate.lon], Math.max(map.getZoom(), 12));
+    $('coordinate-status').textContent = `已定位 WGS84：${coordinate.lat.toFixed(5)}, ${coordinate.lon.toFixed(5)}`;
+  } catch (error) { $('coordinate-status').textContent = error.message; }
+});
+$('share-view').addEventListener('click', async () => {
+  saveView();
+  try {
+    await navigator.clipboard.writeText(location.href);
+    $('share-view').textContent = '已复制链接';
+  } catch {
+    $('share-view').textContent = '链接已在地址栏';
+  }
+  setTimeout(() => { $('share-view').textContent = '复制分享链接'; }, 2500);
+});
+map.on('moveend zoomend', saveView);
 $('year-select').addEventListener('change', event => {
   const dates = state.meta.dates.filter(item => item.date.startsWith(event.target.value));
   selectDate(dates.at(-1).date);
@@ -324,17 +472,19 @@ $('date-select').addEventListener('change', event => selectDate(event.target.val
 
 async function start() {
   try {
-    state.meta = await getJSON('manifest.json');
+    [state.meta, state.historyMeta] = await Promise.all([getJSON('manifest.json'), getJSON('history/manifest.json')]);
     if (state.meta.grid_count !== 231515 || state.meta.date_count !== 82) throw new Error('地图数据合同不一致');
-    const [coordinateBuffer, applicableBuffer, supportBuffer, weatherIndexBuffer] = await Promise.all([
-      getBuffer('grids.bin'), getBuffer('applicable.bin'), getBuffer('support.bin'), getBuffer('weather-index.bin'),
+    if (state.historyMeta.date_count !== 82 || state.historyMeta.grid_count !== state.meta.grid_count || state.historyMeta.observed_records !== state.meta.observed_grid_date_records || state.historyMeta.date_order.some((date, i) => date !== state.meta.dates[i].date)) throw new Error('历史数据与地图日期不一致');
+    const [coordinateBuffer, applicableBuffer, supportBuffer, weatherIndexBuffer, latticeBuffer, boundary] = await Promise.all([
+      getBuffer('grids.bin'), getBuffer('applicable.bin'), getBuffer('support.bin'), getBuffer('weather-index.bin'), getBuffer('history/grid-lattice.bin'), getJSON('history/technical-boundary.geojson'),
     ]);
     const count = state.meta.grid_count;
-    if (coordinateBuffer.byteLength !== count * 8 || applicableBuffer.byteLength !== count || supportBuffer.byteLength !== count * 2 || weatherIndexBuffer.byteLength !== count * 2) throw new Error('基础格网文件长度不符');
+    if (coordinateBuffer.byteLength !== count * 8 || applicableBuffer.byteLength !== count || supportBuffer.byteLength !== count * 2 || weatherIndexBuffer.byteLength !== count * 2 || latticeBuffer.byteLength !== count * 4) throw new Error('基础格网文件长度不符');
     state.coords = new Float32Array(coordinateBuffer);
     state.applicable = new Uint8Array(applicableBuffer);
     state.support = new Uint8Array(supportBuffer);
     state.weatherIndex = new Uint16Array(weatherIndexBuffer);
+    state.lattice = new Uint16Array(latticeBuffer);
     state.mercatorX = new Float64Array(count);
     state.mercatorY = new Float64Array(count);
     for (let index = 0; index < count; index++) {
@@ -343,16 +493,32 @@ async function start() {
       state.mercatorX[index] = (lon + 180) / 360;
       state.mercatorY[index] = .5 - Math.log(Math.tan(Math.PI / 4 + lat / 2)) / (2 * Math.PI);
     }
-    state.date = state.meta.initial_date;
+    const restored = decodeView(location.search, layerById, new Set(state.meta.dates.map(item => item.date)), count);
+    state.date = restored.date || state.meta.initial_date;
+    state.layer = restored.layer || 'relative';
+    state.opacity = restored.opacity ?? .86;
+    state.selected = restored.selected;
+    $('layer-opacity').value = String(Math.round(state.opacity * 100));
+    $('opacity-value').textContent = `${Math.round(state.opacity * 100)}%`;
+    if (restored.center) map.setView([restored.center.lat, restored.center.lon], restored.zoom ?? 10);
+    else if (restored.zoom !== null) map.setZoom(restored.zoom);
+    map.createPane('researchBoundary');
+    map.getPane('researchBoundary').style.zIndex = '440';
+    map.getPane('researchBoundary').style.pointerEvents = 'none';
+    L.geoJSON(boundary, { pane: 'researchBoundary', interactive: false, style: { color: '#1b3437', weight: 2, opacity: .9, fill: false, dashArray: '7 5' } }).addTo(map);
+    state.boundary = boundary.features[0].geometry;
     renderLayerList();
     renderYearDateControls();
     updateLabels();
     await Promise.all([
+      ensureLayer(state.layer, state.date),
       ensureDate(state.date),
       ...['built','tree','elevation'].map(id => ensureLayer(id, state.date)),
     ]);
     $('map-loading').classList.add('hidden');
     heatLayer.redraw();
+    renderInspector();
+    saveView();
   } catch (error) { showError(error); }
 }
 

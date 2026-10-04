@@ -11,6 +11,11 @@ export default [{
       requestAnimationFrame: 'readonly',
       cancelAnimationFrame: 'readonly',
       URL: 'readonly',
+      URLSearchParams: 'readonly',
+      history: 'readonly',
+      location: 'readonly',
+      navigator: 'readonly',
+      setTimeout: 'readonly',
     },
   },
   rules: {
