@@ -2,6 +2,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './style.css';
 import { layers, layerById, weatherFieldIds, decodeValue, displayValue } from './layers.js';
+import { canvasFrame } from './map-geometry.js';
 
 const base = `${import.meta.env.BASE_URL}data/`;
 const $ = (id) => document.getElementById(id);
@@ -221,13 +222,13 @@ const CanvasGrid = L.Layer.extend({
   draw() {
     if (!state.coords || !this.map) return;
     const size = this.map.getSize();
-    const origin = this.map.getPixelOrigin();
+    const { position, origin } = canvasFrame(this.map);
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     this.canvas.width = Math.round(size.x * dpr);
     this.canvas.height = Math.round(size.y * dpr);
     this.canvas.style.width = `${size.x}px`;
     this.canvas.style.height = `${size.y}px`;
-    L.DomUtil.setPosition(this.canvas, this.map.containerPointToLayerPoint([0, 0]));
+    L.DomUtil.setPosition(this.canvas, position);
     const context = this.canvas.getContext('2d', { alpha: true });
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
     const world = 256 * 2 ** this.map.getZoom();

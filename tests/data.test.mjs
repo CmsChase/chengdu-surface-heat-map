@@ -63,3 +63,18 @@ test('map value decoding keeps no-data and measurement meanings apart', () => {
   assert(Math.abs(decodeValue('t2m_last_k', 300) - 26.85) < 1e-10);
   assert(layerById.has('relative'));
 });
+
+test('cropland data covers northern Chengdu as well as all positive-land grids', () => {
+  const coordinateBytes = file('grids.bin');
+  const coordinates = new Float32Array(coordinateBytes.buffer, coordinateBytes.byteOffset, metadata.grid_count * 2);
+  const applicable = file('applicable.bin');
+  const cropBytes = file('crop.bin');
+  const crop = new Int16Array(cropBytes.buffer, cropBytes.byteOffset, metadata.grid_count);
+  let northernGrids = 0;
+  for (let i = 0; i < metadata.grid_count; i++) {
+    if (!applicable[i]) continue;
+    assert(crop[i] >= 0 && crop[i] <= 1000);
+    if (coordinates[i * 2 + 1] > 30.67) northernGrids++;
+  }
+  assert(northernGrids > 100000, 'northern Chengdu must have substantial valid static coverage');
+});
