@@ -4,6 +4,7 @@ import './style.css';
 import { layers, layerById, weatherFieldIds, decodeValue, displayValue } from './layers.js';
 import { canvasFrame } from './map-geometry.js';
 import { gridIdentity, decodeBlock, historyRows, historySummary, comparisonRows, comparisonSummary, parseWgs84, encodeView, decodeView, dataStatus, inResearchBoundary } from './history.js';
+import { singleHistoryCsv, twoGridCsv } from './evidence.js';
 
 const base = `${import.meta.env.BASE_URL}data/`;
 const $ = (id) => document.getElementById(id);
@@ -343,6 +344,35 @@ function staticValue(id, index) {
   return encoded === undefined ? null : decodeValue(id, encoded);
 }
 
+function downloadCsv(name, content) {
+  const url = URL.createObjectURL(new Blob([content], { type: 'text/csv;charset=utf-8' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = name;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+function printEvidence(html) {
+  const preview = $('print-evidence');
+  preview.innerHTML = `<div class="evidence-preview-actions"><button id="evidence-do-print" type="button">打印 / 保存 PDF</button><button id="evidence-close" type="button">关闭预览</button></div>${html}`;
+  preview.classList.add('open');
+  $('evidence-do-print').addEventListener('click', () => window.print());
+  $('evidence-close').addEventListener('click', () => { preview.classList.remove('open'); preview.innerHTML = ''; });
+}
+
+function evidenceFooter() {
+  saveView();
+  const link = location.href.replaceAll('&', '&amp;').replaceAll('"', '&quot;');
+  return `<div class="evidence-provenance"><div>数据版本：2021–2024 · 82 次物理过境 · 250 m 固定格网</div><div>来源：USGS/NASA Landsat Collection 2 地表温度、ESA WorldCover 2020、NASA SRTM。<br>来源清单：public/data/manifest.json · ${state.historyMeta.source_sha256.accepted_map_manifest}<br>历史清单：public/data/history/manifest.json · 固定格网 ${state.historyMeta.grid_lattice.sha256}</div><div>导出时间（UTC）：${new Date().toISOString()}</div><div>恢复地图选择：<a href="${link}">${link}</a></div></div>`;
+}
+
+function distribution(values) {
+  return Object.entries(values).sort().map(([key, count]) => `${key}: ${count}`).join(' · ') || '无';
+}
+
 async function ensureHistoryBlock(block) {
   if (!state.historyMeta.blocks[block]) throw new Error(`历史块不在固定清单中: ${block}`);
   if (!state.historyBlocks.has(block)) {
@@ -376,9 +406,17 @@ function historyMarkup(index) {
   if (!cached || !state.historyData || state.historyData.index !== index) return '<p class="history-wait">正在读取该空间块的历史观测…</p>';
   const rows = state.historyData.rows;
   const summary = historySummary(rows);
-  const distribution = object => Object.entries(object).sort().map(([key, count]) => `${key}: ${count}`).join(' · ') || '无';
   const table = rows.map(row => `<tr class="${row.observed === null ? 'missing' : ''}"><td>${row.date}</td><td>${row.observed === null ? '缺测' : displayValue('observed', row.observed)}</td><td>${row.relative === null ? '—' : displayValue('relative', row.relative)}</td><td>${row.qa === null ? '—' : `${row.qa}%`}</td></tr>`).join('');
-  return `<div class="history-summary"><strong>${summary.count} / 82</strong> 个日期有合格观测<br>年份：${distribution(summary.years)}<br>月份：${distribution(summary.months)}</div><div class="history-chart">${historyChart(rows)}<small>按真实日期间隔排列；点为实际观测，底部短线为缺测。没有连线、插值或趋势。</small></div><div class="history-table-wrap"><table><thead><tr><th>日期</th><th>地表温度</th><th>同日温差</th><th>有效土地像元</th></tr></thead><tbody>${table}</tbody></table></div><small>温差参照：当日 QA 可观测格网的固定非水土地面积加权中位数。温度显示至 0.01 °C、比例至 1 个百分点；参照中位数保存至 0.0001 °C。</small>`;
+  return `<div class="history-summary"><strong>${summary.count} / 82</strong> 个日期有合格观测<br>年份：${distribution(summary.years)}<br>月份：${distribution(summary.months)}</div><div class="history-chart">${historyChart(rows)}<small>按真实日期间隔排列；点为实际观测，底部短线为缺测。没有连线、插值或趋势。</small></div><div class="evidence-actions"><button id="single-csv" type="button">下载82日期 CSV</button><button id="single-print" type="button">打印证据卡 / 保存 PDF</button></div><div class="history-table-wrap"><table><thead><tr><th>日期</th><th>地表温度</th><th>同日温差</th><th>有效土地像元</th></tr></thead><tbody>${table}</tbody></table></div><small>温差参照：当日 QA 可观测格网的固定非水土地面积加权中位数。温度显示至 0.01 °C、比例至 1 个百分点；参照中位数保存至 0.0001 °C。</small>`;
+}
+
+function singleEvidenceCard(index) {
+  const rows = state.historyData.rows;
+  const summary = historySummary(rows);
+  const identity = identityAt(index);
+  const lat = state.coords[index * 2 + 1];
+  const lon = state.coords[index * 2];
+  return `<article class="evidence-card"><div class="evidence-heading">成都地表热地图 / 观测证据卡</div><h1>单格历史观测</h1><p>${identity.id} · 250 m 固定格网<br>WGS84 ${lat.toFixed(5)}°N, ${lon.toFixed(5)}°E</p><p>高程 ${displayValue('elevation', staticValue('elevation', index))} · 建成地 ${displayValue('built', staticValue('built', index))} · 树木类 ${displayValue('tree', staticValue('tree', index))}</p><div class="evidence-stat">合格观测 <strong>${summary.count} / 82</strong> 日期</div><p>年份：${distribution(summary.years)}<br>月份：${distribution(summary.months)}</p><div class="evidence-chart">${historyChart(rows)}</div><p>点按实际过境日期排列；短线表示无合格观测。无连线、插值或趋势。逐日数值与缺测状态见 CSV。</p><p>相对温差参照为同日 QA 可观测格网的固定非水土地面积加权中位数，不是真实全市中位数。地表温度不是气温、站点实测或人体热暴露；树木类比例不是实测遮阴。</p>${evidenceFooter()}</article>`;
 }
 
 async function expandHistory(index) {
@@ -417,6 +455,13 @@ function comparisonChart(rows) {
   return `<svg viewBox="0 0 610 140" role="img" aria-label="共同有效日期的 A 减 B 地表温差散点；无连线或插值"><path d="M34 15v101h540" fill="none" stroke="#8fa5a0"/><path d="M34 66h540" stroke="#a5bcb5" stroke-dasharray="3 3"/><text x="0" y="69">0°</text>${dots}<text x="34" y="135">2021</text><text x="539" y="135">2024</text></svg>`;
 }
 
+function comparisonEvidenceCard(a, b, rows) {
+  const summary = comparisonSummary(rows);
+  const location = (label, index) => `<p>${label}：${identityAt(index).id} · 250 m 固定格网<br>WGS84 ${state.coords[index * 2 + 1].toFixed(5)}°N, ${state.coords[index * 2].toFixed(5)}°E<br>高程 ${displayValue('elevation', staticValue('elevation', index))} · 建成地 ${displayValue('built', staticValue('built', index))} · 树木类 ${displayValue('tree', staticValue('tree', index))}</p>`;
+  const overall = summary.sharedCount === 0 ? '无法进行同日比较。' : `共同日期等权 A−B 中位数 ${displayValue('relative', summary.median)}；A 较热 ${summary.aWarmerCount} / ${summary.sharedCount} 天，相等 ${summary.equalCount} 天。${summary.sharedCount === 1 ? '仅一个共同日期，不作重复性结论。' : ''}`;
+  return `<article class="evidence-card"><div class="evidence-heading">成都地表热地图 / 观测证据卡</div><h1>两地点同日比较</h1><div class="evidence-places">${location('A', a)}${location('B', b)}</div><div class="evidence-stat">共同有效 <strong>${summary.sharedCount} / 82</strong> 日期 · A ${summary.aCount} · B ${summary.bCount}</div><p>共同日期年份：${distribution(summary.years)}<br>共同日期月份：${distribution(summary.months)}</p><p>${overall}</p>${summary.sharedCount ? `<div class="evidence-chart">${comparisonChart(rows)}</div>` : ''}<p>ΔT = A、B 同一物理日期的 QA 合格地表温度中位数之差。图中只有独立日期的点，没有连线、插值或趋势；82 日期逐日状态见 CSV。</p><p>同日比较减少日期天气差异，但不能控制高程、土地类型或有效像元构成。它不是气温差、站点实测、遮阴因果效果、人体热暴露或治理优先级。</p>${evidenceFooter()}</article>`;
+}
+
 function comparisonLocation(label, index) {
   if (index < 0) return `<div class="compare-location empty"><strong>${label} · 尚未选格</strong><span>在地图点选，或输入 WGS84 纬度、经度定位</span></div>`;
   const identity = identityAt(index);
@@ -428,7 +473,6 @@ function renderComparisonPanel(target) {
   const { a, b, pick } = state.comparison;
   const rows = state.comparisonData?.a === a && state.comparisonData?.b === b ? state.comparisonData.rows : null;
   const summary = rows ? comparisonSummary(rows) : null;
-  const distribution = values => Object.entries(values).sort().map(([key, count]) => `${key}: ${count}`).join(' · ') || '无';
   const table = rows?.map(row => `<tr class="${row.status === 'both' ? '' : 'missing'}"><td>${row.date}</td><td>${row.a === null ? '缺测' : displayValue('observed', row.a)}</td><td>${row.b === null ? '缺测' : displayValue('observed', row.b)}</td><td>${row.difference === null ? '—' : displayValue('relative', row.difference)}</td><td>${row.aQa === null ? '—' : `${row.aQa}%`}</td><td>${row.bQa === null ? '—' : `${row.bQa}%`}</td></tr>`).join('');
   target.innerHTML = `<button class="inspector-close" id="compare-close" aria-label="退出两地比较">×</button>
     <span class="inspector-kicker">TWO GRID / SAME OVERPASS</span><h2>两地点同日比较</h2>
@@ -441,6 +485,7 @@ function renderComparisonPanel(target) {
           : `<div class="compare-summary"><strong>${summary.sharedCount} / 82</strong> 个共同有效日期<br>A 有效 ${summary.aCount} · B 有效 ${summary.bCount}<br>仅 A ${summary.aOnlyCount} · 仅 B ${summary.bOnlyCount} · 均无 ${summary.neitherCount}<br>共同日期年份：${distribution(summary.years)}<br>共同日期月份：${distribution(summary.months)}</div>
             ${summary.sharedCount === 0 ? '<p class="compare-message">无法进行同日比较。</p>' : `<div class="compare-keyline">共同日期等权温差中位数 <strong>${displayValue('relative', summary.median)}</strong><br>A 较热 <strong>${summary.aWarmerCount} / ${summary.sharedCount}</strong> 天；相等 ${summary.equalCount} 天</div>${summary.sharedCount === 1 ? '<p class="compare-message">仅一个共同日期，只描述该次观测，不作重复性结论。</p>' : ''}`}
             ${summary.sharedCount ? `<div class="history-chart">${comparisonChart(rows)}<small>点为同日均有效时的 A − B；不连线、不插值。82 日期的缺测状态见下表。</small></div>` : ''}
+            <div class="evidence-actions"><button id="compare-csv" type="button">下载82日期 CSV</button><button id="compare-print" type="button">打印证据卡 / 保存 PDF</button></div>
             <div class="history-table-wrap"><table><thead><tr><th>日期</th><th>A 温度</th><th>B 温度</th><th>A − B</th><th>A 有效像元</th><th>B 有效像元</th></tr></thead><tbody>${table}</tbody></table></div>`}
     <small>同日比较减少日期天气差异，不能控制高程、土地类型或有效像元构成。数值是两个 250 m 格网的 QA 合格地表温度中位数差，不是站台实测、气温差、遮阴因果效果或人体热暴露；树木类比例不能证明降温原因。</small>`;
   target.classList.remove('hidden');
@@ -458,6 +503,10 @@ function renderComparisonPanel(target) {
     state.comparison.pick = 'A';
     beginComparisonLoad();
   });
+  $('compare-csv')?.addEventListener('click', () => {
+    downloadCsv(`chengdu_compare_${a}_${b}.csv`, twoGridCsv({ aId: identityAt(a).id, bId: identityAt(b).id, rows }));
+  });
+  $('compare-print')?.addEventListener('click', () => printEvidence(comparisonEvidenceCard(a, b, rows)));
 }
 
 async function loadComparison(generation) {
@@ -543,6 +592,11 @@ function renderInspector() {
     if (state.historyExpanded) { state.historyExpanded = false; renderInspector(); }
     else expandHistory(index);
   });
+  $('single-csv')?.addEventListener('click', () => {
+    const rows = state.historyData.rows;
+    downloadCsv(`chengdu_history_${identity.id}.csv`, singleHistoryCsv({ gridId: identity.id, lat: state.coords[index * 2 + 1], lon: state.coords[index * 2], rows }));
+  });
+  $('single-print')?.addEventListener('click', () => printEvidence(singleEvidenceCard(index)));
 }
 
 map.on('click', event => {

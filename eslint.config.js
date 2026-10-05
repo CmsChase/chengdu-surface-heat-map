@@ -12,6 +12,7 @@ export default [{
       cancelAnimationFrame: 'readonly',
       URL: 'readonly',
       URLSearchParams: 'readonly',
+      Blob: 'readonly',
       history: 'readonly',
       location: 'readonly',
       navigator: 'readonly',
