@@ -3,7 +3,7 @@ import 'leaflet/dist/leaflet.css';
 import './style.css';
 import { layers, layerById, weatherFieldIds, decodeValue, displayValue } from './layers.js';
 import { canvasFrame } from './map-geometry.js';
-import { gridIdentity, decodeBlock, historyRows, historySummary, parseWgs84, encodeView, decodeView, dataStatus, inResearchBoundary } from './history.js';
+import { gridIdentity, decodeBlock, historyRows, historySummary, comparisonRows, comparisonSummary, parseWgs84, encodeView, decodeView, dataStatus, inResearchBoundary } from './history.js';
 
 const base = `${import.meta.env.BASE_URL}data/`;
 const $ = (id) => document.getElementById(id);
@@ -30,6 +30,10 @@ const state = {
   selectionGeneration: 0,
   opacity: .86,
   boundary: null,
+  comparison: { enabled: false, a: -1, b: -1, pick: 'A' },
+  comparisonData: null,
+  comparisonError: null,
+  comparisonGeneration: 0,
 };
 
 const map = L.map('map', {
@@ -282,14 +286,28 @@ const CanvasGrid = L.Layer.extend({
       context.fillRect(x - half, y - half, cell + .3, cell + .3);
     }
     context.globalAlpha = 1;
-    if (state.selected >= 0) {
-      const index = state.selected;
+    const highlight = (index, color, label) => {
+      if (index < 0) return;
       const x = state.mercatorX[index] * world - origin.x;
       const y = state.mercatorY[index] * world - origin.y;
       context.strokeStyle = '#142b2e';
-      context.lineWidth = 2.5;
+      context.lineWidth = 5;
       context.strokeRect(x - Math.max(half, 5), y - Math.max(half, 5), Math.max(cell, 10), Math.max(cell, 10));
-    }
+      context.strokeStyle = color;
+      context.lineWidth = 3;
+      context.strokeRect(x - Math.max(half, 5), y - Math.max(half, 5), Math.max(cell, 10), Math.max(cell, 10));
+      if (label) {
+        context.font = 'bold 14px sans-serif';
+        context.fillStyle = '#172c30';
+        context.fillRect(x - 9, y - Math.max(half, 5) - 23, 19, 19);
+        context.fillStyle = color;
+        context.fillText(label, x - 5, y - Math.max(half, 5) - 8);
+      }
+    };
+    if (state.comparison.enabled) {
+      highlight(state.comparison.a, '#f6b46d', 'A');
+      highlight(state.comparison.b, '#8fd1ce', 'B');
+    } else highlight(state.selected, '#f6b46d', '');
   },
 });
 const heatLayer = new CanvasGrid().addTo(map);
@@ -312,7 +330,7 @@ function nearestGrid(latlng) {
 
 function saveView() {
   if (!state.meta) return;
-  const query = encodeView({ layer: state.layer, date: state.date, center: map.getCenter(), zoom: map.getZoom(), selected: state.selected, opacity: state.opacity });
+  const query = encodeView({ layer: state.layer, date: state.date, center: map.getCenter(), zoom: map.getZoom(), selected: state.selected, opacity: state.opacity, comparison: state.comparison });
   history.replaceState(null, '', `${location.pathname}?${query}`);
 }
 
@@ -387,8 +405,115 @@ async function ensureInspectorStatic(index) {
   if (generation === state.selectionGeneration && state.selected === index) renderInspector();
 }
 
+function comparisonChart(rows) {
+  const valid = rows.filter(row => row.status === 'both');
+  const timestamps = rows.map(row => Date.parse(`${row.date}T00:00:00Z`));
+  const start = Math.min(...timestamps);
+  const span = Math.max(...timestamps) - start || 1;
+  const x = date => 34 + (Date.parse(`${date}T00:00:00Z`) - start) / span * 540;
+  const extent = Math.max(1, ...valid.map(row => Math.abs(row.difference)));
+  const y = difference => 66 - difference / extent * 43;
+  const dots = valid.map(row => `<circle cx="${x(row.date).toFixed(1)}" cy="${y(row.difference).toFixed(1)}" r="3" fill="${row.difference >= 0 ? '#f6b46d' : '#8fd1ce'}"><title>${row.date} ${displayValue('relative', row.difference)}</title></circle>`).join('');
+  return `<svg viewBox="0 0 610 140" role="img" aria-label="共同有效日期的 A 减 B 地表温差散点；无连线或插值"><path d="M34 15v101h540" fill="none" stroke="#8fa5a0"/><path d="M34 66h540" stroke="#a5bcb5" stroke-dasharray="3 3"/><text x="0" y="69">0°</text>${dots}<text x="34" y="135">2021</text><text x="539" y="135">2024</text></svg>`;
+}
+
+function comparisonLocation(label, index) {
+  if (index < 0) return `<div class="compare-location empty"><strong>${label} · 尚未选格</strong><span>在地图点选，或输入 WGS84 纬度、经度定位</span></div>`;
+  const identity = identityAt(index);
+  const field = id => displayValue(id, staticValue(id, index));
+  return `<div class="compare-location"><strong>${label} · ${identity.id}</strong><span>${state.coords[index * 2 + 1].toFixed(5)}°N, ${state.coords[index * 2].toFixed(5)}°E</span><span>高程 ${field('elevation')} · 建成地 ${field('built')} · 树木类 ${field('tree')}</span><span>有效日期 ${state.support[index * 2]} / 82</span></div>`;
+}
+
+function renderComparisonPanel(target) {
+  const { a, b, pick } = state.comparison;
+  const rows = state.comparisonData?.a === a && state.comparisonData?.b === b ? state.comparisonData.rows : null;
+  const summary = rows ? comparisonSummary(rows) : null;
+  const distribution = values => Object.entries(values).sort().map(([key, count]) => `${key}: ${count}`).join(' · ') || '无';
+  const table = rows?.map(row => `<tr class="${row.status === 'both' ? '' : 'missing'}"><td>${row.date}</td><td>${row.a === null ? '缺测' : displayValue('observed', row.a)}</td><td>${row.b === null ? '缺测' : displayValue('observed', row.b)}</td><td>${row.difference === null ? '—' : displayValue('relative', row.difference)}</td><td>${row.aQa === null ? '—' : `${row.aQa}%`}</td><td>${row.bQa === null ? '—' : `${row.bQa}%`}</td></tr>`).join('');
+  target.innerHTML = `<button class="inspector-close" id="compare-close" aria-label="退出两地比较">×</button>
+    <span class="inspector-kicker">TWO GRID / SAME OVERPASS</span><h2>两地点同日比较</h2>
+    <p>点选或 WGS84 定位选择 <strong>${pick}</strong>；A、B 必须是不同的正土地格网。</p>
+    <div class="compare-picks"><button id="compare-pick-a" class="${pick === 'A' ? 'active' : ''}" type="button">下次选 A</button><button id="compare-pick-b" class="${pick === 'B' ? 'active' : ''}" type="button">下次选 B</button><button id="compare-swap" type="button" ${a < 0 || b < 0 ? 'disabled' : ''}>交换 A/B</button><button id="compare-clear" type="button">清除</button></div>
+    ${comparisonLocation('A', a)}${comparisonLocation('B', b)}
+    ${a < 0 || b < 0 ? '<p class="compare-message">选齐 A、B 后读取各自空间块；没有观测的格网也可比较缺测状态。</p>'
+      : state.comparisonError ? `<p class="compare-message">读取失败：${state.comparisonError}</p>`
+        : !rows ? '<p class="compare-message">正在按空间块读取两格历史记录…</p>'
+          : `<div class="compare-summary"><strong>${summary.sharedCount} / 82</strong> 个共同有效日期<br>A 有效 ${summary.aCount} · B 有效 ${summary.bCount}<br>仅 A ${summary.aOnlyCount} · 仅 B ${summary.bOnlyCount} · 均无 ${summary.neitherCount}<br>共同日期年份：${distribution(summary.years)}<br>共同日期月份：${distribution(summary.months)}</div>
+            ${summary.sharedCount === 0 ? '<p class="compare-message">无法进行同日比较。</p>' : `<div class="compare-keyline">共同日期等权温差中位数 <strong>${displayValue('relative', summary.median)}</strong><br>A 较热 <strong>${summary.aWarmerCount} / ${summary.sharedCount}</strong> 天；相等 ${summary.equalCount} 天</div>${summary.sharedCount === 1 ? '<p class="compare-message">仅一个共同日期，只描述该次观测，不作重复性结论。</p>' : ''}`}
+            ${summary.sharedCount ? `<div class="history-chart">${comparisonChart(rows)}<small>点为同日均有效时的 A − B；不连线、不插值。82 日期的缺测状态见下表。</small></div>` : ''}
+            <div class="history-table-wrap"><table><thead><tr><th>日期</th><th>A 温度</th><th>B 温度</th><th>A − B</th><th>A 有效像元</th><th>B 有效像元</th></tr></thead><tbody>${table}</tbody></table></div>`}
+    <small>同日比较减少日期天气差异，不能控制高程、土地类型或有效像元构成。数值是两个 250 m 格网的 QA 合格地表温度中位数差，不是站台实测、气温差、遮阴因果效果或人体热暴露；树木类比例不能证明降温原因。</small>`;
+  target.classList.remove('hidden');
+  $('compare-close').addEventListener('click', () => toggleComparison(false));
+  $('compare-pick-a').addEventListener('click', () => { state.comparison.pick = 'A'; renderInspector(); saveView(); });
+  $('compare-pick-b').addEventListener('click', () => { state.comparison.pick = 'B'; renderInspector(); saveView(); });
+  $('compare-swap').addEventListener('click', () => {
+    [state.comparison.a, state.comparison.b] = [state.comparison.b, state.comparison.a];
+    state.comparison.pick = 'B';
+    beginComparisonLoad();
+  });
+  $('compare-clear').addEventListener('click', () => {
+    state.comparison.a = -1;
+    state.comparison.b = -1;
+    state.comparison.pick = 'A';
+    beginComparisonLoad();
+  });
+}
+
+async function loadComparison(generation) {
+  const { a, b } = state.comparison;
+  if (a < 0 || b < 0) return;
+  try {
+    const aId = identityAt(a);
+    const bId = identityAt(b);
+    const [aBlock, bBlock] = await Promise.all([ensureHistoryBlock(aId.block), ensureHistoryBlock(bId.block)]);
+    if (generation !== state.comparisonGeneration || !state.comparison.enabled) return;
+    state.comparisonData = { a, b, rows: comparisonRows(aBlock.get(aId.slot), bBlock.get(bId.slot), state.meta.dates) };
+    renderInspector();
+  } catch (error) {
+    if (generation !== state.comparisonGeneration) return;
+    state.comparisonError = error.message;
+    renderInspector();
+  }
+}
+
+function beginComparisonLoad() {
+  const generation = ++state.comparisonGeneration;
+  state.comparisonData = null;
+  state.comparisonError = null;
+  renderInspector();
+  heatLayer.redraw();
+  saveView();
+  void loadComparison(generation);
+}
+
+function selectComparisonGrid(index) {
+  if (index < 0 || !state.applicable[index]) throw new Error('请选择技术研究范围内的正土地格网');
+  const other = state.comparison.pick === 'A' ? state.comparison.b : state.comparison.a;
+  if (index === other) throw new Error('A、B 必须是不同格网；请选择另一位置');
+  state.comparison[state.comparison.pick.toLowerCase()] = index;
+  if (state.comparison.pick === 'A') state.comparison.pick = 'B';
+  beginComparisonLoad();
+}
+
+function toggleComparison(enabled = !state.comparison.enabled) {
+  state.comparison.enabled = enabled;
+  $('compare-mode').textContent = enabled ? '退出比较' : '两地比较';
+  if (enabled && state.comparison.a < 0 && state.selected >= 0 && state.applicable[state.selected]) {
+    state.comparison.a = state.selected;
+    state.comparison.pick = 'B';
+  }
+  ++state.comparisonGeneration;
+  renderInspector();
+  heatLayer.redraw();
+  saveView();
+  if (enabled) void loadComparison(state.comparisonGeneration);
+}
+
 function renderInspector() {
   const target = $('inspector');
+  target.classList.toggle('compare', state.comparison.enabled);
+  if (state.comparison.enabled) { renderComparisonPanel(target); return; }
   if (state.selected < 0) { target.classList.add('hidden'); return; }
   const index = state.selected;
   const value = valueAt(index);
@@ -422,6 +547,17 @@ function renderInspector() {
 
 map.on('click', event => {
   if (!state.meta) return;
+  if (state.comparison.enabled) {
+    try {
+      if (!inResearchBoundary(event.latlng, state.boundary)) throw new Error('研究范围外；无法选择比较格网');
+      selectComparisonGrid(nearestGrid(event.latlng));
+      $('outside-status').classList.add('hidden');
+    } catch (error) {
+      $('outside-status').textContent = error.message;
+      $('outside-status').classList.remove('hidden');
+    }
+    return;
+  }
   ++state.selectionGeneration;
   const inside = inResearchBoundary(event.latlng, state.boundary);
   state.selected = inside ? nearestGrid(event.latlng) : -1;
@@ -438,6 +574,7 @@ map.on('click', event => {
   saveView();
 });
 
+$('compare-mode').addEventListener('click', () => toggleComparison());
 $('reset-view').addEventListener('click', () => map.fitBounds([[29.6, 102.8], [31.5, 105.5]], { padding: [25, 25] }));
 $('layer-opacity').addEventListener('input', event => {
   state.opacity = Number(event.target.value) / 100;
@@ -449,8 +586,15 @@ $('coordinate-form').addEventListener('submit', event => {
   event.preventDefault();
   try {
     const coordinate = parseWgs84($('coordinate-input').value);
+    const role = state.comparison.pick;
+    if (state.comparison.enabled) {
+      if (!inResearchBoundary({ lat: coordinate.lat, lon: coordinate.lon }, state.boundary)) throw new Error('研究范围外；无法选择比较格网');
+      selectComparisonGrid(nearestGrid({ lat: coordinate.lat, lng: coordinate.lon }));
+    }
     map.setView([coordinate.lat, coordinate.lon], Math.max(map.getZoom(), 12));
-    $('coordinate-status').textContent = `已定位 WGS84：${coordinate.lat.toFixed(5)}, ${coordinate.lon.toFixed(5)}`;
+    $('coordinate-status').textContent = state.comparison.enabled
+      ? `已选 ${role}，WGS84：${coordinate.lat.toFixed(5)}, ${coordinate.lon.toFixed(5)}`
+      : `已定位 WGS84：${coordinate.lat.toFixed(5)}, ${coordinate.lon.toFixed(5)}`;
   } catch (error) { $('coordinate-status').textContent = error.message; }
 });
 $('share-view').addEventListener('click', async () => {
@@ -498,6 +642,10 @@ async function start() {
     state.layer = restored.layer || 'relative';
     state.opacity = restored.opacity ?? .86;
     state.selected = restored.selected;
+    state.comparison = restored.comparison;
+    if (!state.applicable[state.comparison.a]) state.comparison.a = -1;
+    if (!state.applicable[state.comparison.b] || state.comparison.a === state.comparison.b) state.comparison.b = -1;
+    $('compare-mode').textContent = state.comparison.enabled ? '退出比较' : '两地比较';
     $('layer-opacity').value = String(Math.round(state.opacity * 100));
     $('opacity-value').textContent = `${Math.round(state.opacity * 100)}%`;
     if (restored.center) map.setView([restored.center.lat, restored.center.lon], restored.zoom ?? 10);
@@ -519,6 +667,7 @@ async function start() {
     heatLayer.redraw();
     renderInspector();
     saveView();
+    if (state.comparison.enabled) void loadComparison(state.comparisonGeneration);
   } catch (error) { showError(error); }
 }
 

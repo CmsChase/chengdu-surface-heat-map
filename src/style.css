@@ -102,8 +102,25 @@ h1 em { color:#b24d37; font-style:normal; }
 .history-table-wrap th { position:sticky; top:0; background:#1c383a; color:#dcb48a; }
 .history-table-wrap td,.history-table-wrap th { padding:6px 3px; text-align:left; border-bottom:1px solid #ffffff20; }
 .history-table-wrap tr.missing { color:#8ca49b; }
+.compare-picks { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; margin:12px 0; }
+.compare-picks button { padding:7px 4px; border:1px solid #78968e; color:#e5eee8; background:transparent; font-size:10px; }
+.compare-picks button.active { color:#162e30; background:#e2b98d; border-color:#e2b98d; }
+.compare-picks button:disabled { opacity:.4; cursor:default; }
+.compare-location { display:grid; gap:3px; margin:7px 0; padding:9px 10px; background:#24464a; font-size:10px; line-height:1.45; }
+.compare-location strong { color:#ffe2bd; font-size:10px; overflow-wrap:anywhere; }
+.compare-location:nth-of-type(3) strong { color:#a8e3df; }
+.compare-location span { color:#c0d0c9; }
+.compare-location.empty { border:1px dashed #78968e; background:transparent; }
+.compare-message { color:#d4e3d8; font-size:11px; line-height:1.6; }
+.compare-summary { margin:12px 0; color:#b5cbc1; font-size:10px; line-height:1.65; }
+.compare-summary strong,.compare-keyline strong { color:#fff2df; font:500 18px 'DM Mono',monospace; }
+.compare-keyline { border-top:1px solid #ffffff30; padding:10px 0; color:#c3d9ce; font-size:11px; line-height:1.8; }
+.inspector.compare { width:400px; left:24px; right:auto; }
+.inspector.compare .history-table-wrap { overflow:auto; }
+.inspector.compare .history-table-wrap table { min-width:525px; }
 .map-loading { position:absolute; z-index:700; left:50%; top:50%; transform:translate(-50%,-50%); padding:14px 19px; background:#1d3d40; color:#f6f1e6; box-shadow:0 14px 50px rgba(16,41,42,.22); font-size:12px; }
 @media(max-width:950px) { .shell { grid-template-columns:310px minmax(0,1fr); } .sidebar-scroll { padding:23px 20px; } .sidebar-bottom { padding:14px 20px; } .topbar-right>span:not(.status-dot) { display:none; } }
 @media(max-width:800px) { .topbar { height:57px; padding:0 14px; } .brand { font-size:13px; gap:8px; } .brand small { font-size:8px; } .brand-mark { width:30px; height:30px; } .topbar-right { font-size:10px; } .topbar-right a { margin-left:2px; } .shell { height:auto; display:flex; flex-direction:column; } .sidebar { min-height:0; max-height:43dvh; border-right:0; border-bottom:1px solid #cdd2c9; } .sidebar-scroll { padding:15px 18px 10px; } .eyebrow { margin-bottom:5px; } h1 { font-size:23px; line-height:1.25; } h1 br { display:none; } .intro { margin:8px 0 10px; font-size:10px; } .notice { padding:7px 9px; font-size:10px; } .control-heading { margin:12px 0 6px; } .layer-list { display:flex; gap:14px; overflow-x:auto; padding-bottom:5px; } .layer-group { flex:none; min-width:185px; max-height:95px; overflow-y:auto; margin:0; } .group-label { margin-top:0; } .layer-option { height:28px; } .date-heading { margin-top:8px; } .date-controls { grid-template-columns:80px 1fr; } .date-controls label span { display:none; } .date-controls select { height:32px; } .date-info,.method,.sidebar-bottom { display:none; } .map-shell { height:calc(57dvh - 57px); min-height:420px; } .map-top { top:10px; left:10px; right:10px; } .map-top>div { padding:10px 12px; min-width:0; max-width:65%; } .map-top strong { font-size:16px; } .map-top #map-subtitle { font-size:9px; } .map-top button { font-size:10px; padding:7px; } .map-actions { flex-direction:column; } .map-scale { bottom:47px; left:10px; padding:7px; } .map-scale>div { width:100px; } .map-footnote { bottom:12px; left:10px; font-size:9px; } .inspector { top:auto; bottom:12px; right:10px; width:min(300px,calc(100% - 85px)); max-height:min(36dvh,300px); padding:15px; } .inspector h2 { font-size:23px; } .leaflet-bottom.leaflet-right { right:auto; left:0; } .leaflet-control-zoom { margin:0 0 90px 10px!important; } }
 @media(max-width:800px) { .boundary-key { right:10px; bottom:37px; font-size:8px; } }
 @media(max-width:800px) { .leaflet-control-zoom { float:left!important; } }
+@media(max-width:800px) { .inspector.compare { left:auto; right:10px; width:min(300px,calc(100% - 85px)); max-height:min(26dvh,200px); } .map-actions button { padding:5px 6px; } }

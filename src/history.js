@@ -63,6 +63,55 @@ export function historySummary(rows) {
   return { count: observed.length, years, months };
 }
 
+export function comparisonRows(aRecords, bRecords, dates) {
+  const aByDate = new Map((aRecords || []).map(record => [record.dateIndex, record]));
+  const bByDate = new Map((bRecords || []).map(record => [record.dateIndex, record]));
+  return dates.map((date, dateIndex) => {
+    const a = aByDate.get(dateIndex);
+    const b = bByDate.get(dateIndex);
+    const status = a && b ? 'both' : a ? 'a_only' : b ? 'b_only' : 'neither';
+    return {
+      date: date.date,
+      status,
+      a: a ? a.temperature / 100 : null,
+      b: b ? b.temperature / 100 : null,
+      difference: a && b ? (a.temperature - b.temperature) / 100 : null,
+      aQa: a ? a.qa : null,
+      bQa: b ? b.qa : null,
+    };
+  });
+}
+
+export function comparisonSummary(rows) {
+  const shared = rows.filter(row => row.status === 'both');
+  const differences = shared.map(row => row.difference).sort((a, b) => a - b);
+  const middle = Math.floor(differences.length / 2);
+  const median = differences.length === 0 ? null : differences.length % 2
+    ? differences[middle]
+    : (differences[middle - 1] + differences[middle]) / 2;
+  const years = {};
+  const months = {};
+  for (const row of shared) {
+    const year = row.date.slice(0, 4);
+    const month = row.date.slice(5, 7);
+    years[year] = (years[year] || 0) + 1;
+    months[month] = (months[month] || 0) + 1;
+  }
+  return {
+    aCount: rows.filter(row => row.a !== null).length,
+    bCount: rows.filter(row => row.b !== null).length,
+    sharedCount: shared.length,
+    aOnlyCount: rows.filter(row => row.status === 'a_only').length,
+    bOnlyCount: rows.filter(row => row.status === 'b_only').length,
+    neitherCount: rows.filter(row => row.status === 'neither').length,
+    aWarmerCount: shared.filter(row => row.difference > 0).length,
+    equalCount: shared.filter(row => row.difference === 0).length,
+    median,
+    years,
+    months,
+  };
+}
+
 export function parseWgs84(input) {
   const parts = input.trim().split(/[\s,，]+/);
   if (parts.length !== 2 || parts.some(part => part === '' || !Number.isFinite(Number(part)))) {
@@ -75,7 +124,7 @@ export function parseWgs84(input) {
   return { lat, lon };
 }
 
-export function encodeView({ layer, date, center, zoom, selected, opacity }) {
+export function encodeView({ layer, date, center, zoom, selected, opacity, comparison }) {
   const params = new URLSearchParams();
   params.set('layer', layer);
   params.set('date', date);
@@ -84,6 +133,12 @@ export function encodeView({ layer, date, center, zoom, selected, opacity }) {
   params.set('z', zoom.toFixed(2));
   params.set('a', opacity.toFixed(2));
   if (selected >= 0) params.set('grid', String(selected));
+  if (comparison?.enabled) {
+    params.set('compare', '1');
+    if (comparison.a >= 0) params.set('gridA', String(comparison.a));
+    if (comparison.b >= 0) params.set('gridB', String(comparison.b));
+    params.set('pick', comparison.pick === 'B' ? 'B' : 'A');
+  }
   return params.toString();
 }
 
@@ -95,13 +150,22 @@ export function decodeView(search, validLayers, validDates, gridCount) {
   const zoom = number('z');
   const opacity = number('a');
   const selected = number('grid');
+  const validGrid = value => Number.isInteger(value) && value >= 0 && value < gridCount ? value : -1;
+  const a = validGrid(number('gridA'));
+  const b = validGrid(number('gridB'));
   return {
     layer: validLayers.has(params.get('layer')) ? params.get('layer') : null,
     date: validDates.has(params.get('date')) ? params.get('date') : null,
     center: Number.isFinite(lat) && Number.isFinite(lon) && lat >= -90 && lat <= 90 && lon >= -180 && lon <= 180 ? { lat, lon } : null,
     zoom: Number.isFinite(zoom) && zoom >= 7 && zoom <= 15 ? zoom : null,
     opacity: Number.isFinite(opacity) && opacity >= 0.1 && opacity <= 1 ? opacity : null,
-    selected: Number.isInteger(selected) && selected >= 0 && selected < gridCount ? selected : -1,
+    selected: validGrid(selected),
+    comparison: {
+      enabled: params.get('compare') === '1',
+      a,
+      b: b === a ? -1 : b,
+      pick: params.get('pick') === 'B' ? 'B' : 'A',
+    },
   };
 }
 
